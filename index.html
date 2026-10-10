@@ -1,0 +1,1705 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f8f8f6">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tủ truyện">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Tủ truyện</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+:root{
+  /* Bố cục: một cột chữ hẹp, toàn bộ là chữ Times — không ảnh bìa, không thẻ nổi; chỉ đường kẻ mảnh và một màu mực xanh. */
+  --bg:#f8f8f6; --surface:#ffffff; --fg:#1d1d1f; --muted:#6d6c69; --line:#e1e0db;
+  --accent:#27466e; --accent-ink:#ffffff; --danger:#a1322a; --wash:#eef1f5;
+  --serif:"Times New Roman", Tinos, Times, "Liberation Serif", serif;
+  --rs:20px; --rl:1.75; --rw:36em;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#121315; --surface:#1a1b1e; --fg:#dedbd4; --muted:#8f8d87; --line:#2c2d31; --accent:#a0badc; --accent-ink:#121315; --danger:#e48a7f; --wash:#1d2129; color-scheme:dark; }
+}
+:root[data-theme="dark"]{ --bg:#121315; --surface:#1a1b1e; --fg:#dedbd4; --muted:#8f8d87; --line:#2c2d31; --accent:#a0badc; --accent-ink:#121315; --danger:#e48a7f; --wash:#1d2129; color-scheme:dark; }
+:root[data-mode="light"]{ --bg:#f8f8f6; --surface:#ffffff; --fg:#1d1d1f; --muted:#6d6c69; --line:#e1e0db; --accent:#27466e; --accent-ink:#ffffff; --danger:#a1322a; --wash:#eef1f5; color-scheme:light; }
+:root[data-mode="paper"]{ --bg:#f1e9d8; --surface:#f7f0e2; --fg:#372e22; --muted:#7c6e59; --line:#dacdb5; --accent:#7a4a1e; --accent-ink:#fff8ee; --danger:#9a2e21; --wash:#ebe0ca; color-scheme:light; }
+:root[data-mode="dark"]{ --bg:#121315; --surface:#1a1b1e; --fg:#dedbd4; --muted:#8f8d87; --line:#2c2d31; --accent:#a0badc; --accent-ink:#121315; --danger:#e48a7f; --wash:#1d2129; color-scheme:dark; }
+
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--serif);font-size:18px;line-height:1.5;-webkit-text-size-adjust:100%;margin:0}
+*{box-sizing:border-box}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+.wrap{max-width:42rem;margin:0 auto;padding-inline:16px;padding-block:0 72px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.top h1{margin:0;font-size:1.65rem;font-weight:400;letter-spacing:.01em}
+.top h1 i{color:var(--muted);font-size:.7em}
+.top-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:transparent;padding:.38em .85em;border-radius:6px;cursor:pointer;line-height:1.3;text-decoration:none}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.danger{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 40%,var(--line))}
+.btn.big{padding:.6em 1.1em;font-size:1.05rem}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.link{background:none;border:0;padding:.25em 0;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.muted{color:var(--muted)}
+.sc{font-variant:small-caps;letter-spacing:.06em;text-transform:lowercase}
+.small{font-size:.86rem}
+.num{font-variant-numeric:tabular-nums}
+
+/* Search */
+.search{display:grid;gap:10px;padding-block:16px 4px}
+.seg{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--surface)}
+.seg button{flex:1;border:0;background:transparent;padding:.42em .5em;cursor:pointer;white-space:nowrap}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.field{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:.5em .7em;min-width:0}
+textarea.field{resize:vertical;line-height:1.55}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{border:1px solid var(--line);background:transparent;border-radius:999px;padding:.12em .7em;font-size:.88rem;cursor:pointer;font-style:italic}
+.tag[aria-pressed="true"]{background:var(--wash);border-color:var(--accent);color:var(--accent)}
+.filters{display:flex;gap:16px;flex-wrap:wrap;padding-block:6px 0;border-bottom:1px solid var(--line)}
+.filters button{background:none;border:0;padding:.4em 0;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.filters button[aria-pressed="true"]{color:var(--fg);border-bottom-color:var(--fg)}
+
+/* Continue strip */
+.continue{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.continue div{min-width:0}
+.continue b{display:block;font-size:1.15rem;font-weight:700}
+
+/* Shelf */
+.shelf{list-style:none;margin:0;padding:0}
+.shelf li{border-bottom:1px solid var(--line)}
+.row{display:grid;gap:3px;width:100%;text-align:left;background:none;border:0;padding:14px 0;cursor:pointer}
+.row:hover .r-t{color:var(--accent)}
+.r-t{font-size:1.28rem;font-weight:700;line-height:1.25;text-wrap:balance}
+.r-a{font-style:italic;color:var(--muted)}
+.r-g{font-size:.88rem;color:var(--muted)}
+.r-p{display:flex;align-items:center;gap:10px;font-size:.86rem;color:var(--muted);margin-top:4px}
+.bar{flex:0 0 7rem;height:3px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.empty{padding:36px 0;color:var(--muted);text-align:center}
+
+/* Story */
+.story-head{padding-block:22px 6px;display:grid;gap:6px}
+.story-head h1{margin:0;font-size:2rem;line-height:1.15;font-weight:700;text-wrap:balance}
+.story-head .by{font-style:italic;color:var(--muted);font-size:1.1rem;margin:0}
+.note{white-space:pre-wrap;margin:6px 0 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap;padding-block:14px}
+.meta-line{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.9rem}
+.meta-line .bar{flex:1;max-width:14rem}
+.sec{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:22px;border-bottom:1px solid var(--fg);padding-bottom:6px;flex-wrap:wrap}
+.sec h2{margin:0;font-size:1.25rem;font-weight:400}
+.toc{list-style:none;margin:0;padding:0;counter-reset:none}
+.toc li{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+.toc .go{flex:1;min-width:0;text-align:left;background:none;border:0;padding:11px 0;cursor:pointer;display:flex;gap:10px;align-items:baseline}
+.toc .go .n{color:var(--muted);font-size:.82rem;min-width:2.2em;font-variant-numeric:tabular-nums}
+.toc .go .t{overflow-wrap:anywhere}
+.toc li.read .go .t{color:var(--muted)}
+.toc li.cur .go .t{color:var(--accent);font-weight:700}
+.toc .ed{background:transparent;border:1px solid var(--line);border-radius:6px;color:var(--accent);cursor:pointer;padding:.2em .7em;font-size:.88rem;flex:none}
+.toc .ed:hover{border-color:var(--accent)}
+
+.quick summary::-webkit-details-marker{display:none}
+.quick[open] summary{border-bottom-color:var(--line)}
+/* Forms */
+.form{display:grid;gap:16px;padding-block:20px}
+.form label{display:grid;gap:5px}
+.form label>span{font-variant:small-caps;letter-spacing:.06em;text-transform:lowercase;color:var(--muted)}
+.hint{font-size:.85rem;color:var(--muted);margin:0}
+.preview{border:1px dashed var(--line);border-radius:7px;padding:10px 12px;font-size:.92rem;max-height:14rem;overflow:auto}
+.preview ol{margin:.3em 0 0;padding-left:1.4em}
+.check{display:flex!important;grid-template-columns:none;align-items:center;gap:8px}
+.form-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.drop{border:1px dashed var(--muted);border-radius:7px;padding:18px;text-align:center;cursor:pointer}
+.drop.over{background:var(--wash)}
+
+/* Settings */
+.set{padding-block:18px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.set h2{margin:0;font-size:1.25rem;font-weight:400}
+.set .line{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper .btn{min-width:2.4em}
+.dev{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.dev div{min-width:0}
+.pill{display:inline-block;font-size:.78rem;padding:.05em .55em;border-radius:999px;border:1px solid var(--line);margin-left:6px;vertical-align:1px}
+.pill.ok{color:var(--accent);border-color:var(--accent)}
+.pill.warn{color:var(--danger);border-color:var(--danger)}
+.sample{border-left:2px solid var(--line);padding-left:12px;font-size:var(--rs);line-height:var(--rl);margin:0}
+
+/* Reader */
+#reader{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.r-top,.r-bot{position:fixed;left:0;right:0;z-index:21;background:var(--bg);display:flex;align-items:center;gap:8px;padding-inline:12px;transition:transform .22s ease}
+.r-top{top:0;padding-top:calc(env(safe-area-inset-top,0px) + 8px);padding-bottom:8px;border-bottom:1px solid var(--line)}
+.r-bot{bottom:0;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px);padding-top:8px;border-top:1px solid var(--line);justify-content:space-between}
+#reader.calm .r-top{transform:translateY(-110%)}
+#reader.calm .r-bot{transform:translateY(110%)}
+.r-top .ttl{flex:1;min-width:0;display:grid;line-height:1.2}
+.r-top .ttl b,.r-top .ttl span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-top .ttl span{font-size:.82rem;color:var(--muted)}
+.ib{background:none;border:0;padding:.35em .55em;cursor:pointer;border-radius:6px;white-space:nowrap}
+.ib:hover{background:var(--wash)}
+.r-body{max-width:var(--rw);margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 76px) 18px calc(env(safe-area-inset-bottom,0px) + 110px);font-size:var(--rs);line-height:var(--rl)}
+.r-body h2{font-size:1.35em;line-height:1.3;font-weight:700;margin:0 0 1.2em;text-align:center;text-wrap:balance}
+.r-body .r-kicker{text-align:center;color:var(--muted);font-size:.7em;margin:0 0 .4em;font-variant:small-caps;letter-spacing:.08em}
+.r-text p{margin:0 0 .9em;overflow-wrap:break-word}
+.r-text.just p{text-align:justify;hyphens:auto}
+.r-end{display:flex;justify-content:space-between;gap:10px;margin-top:2.4em;padding-top:1.2em;border-top:1px solid var(--line);font-size:16px;flex-wrap:wrap}
+.sel-btn{position:fixed;z-index:22;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 70px);box-shadow:0 4px 14px color-mix(in srgb,#000 22%,transparent)}
+/* Lật trang ngang */
+#reader.paged{overflow:hidden}
+#reader.paged.calm .r-top,#reader.paged.calm .r-bot{transform:none}
+#reader.paged .r-body{position:absolute;left:0;right:0;margin:0 auto;width:min(100%, calc(var(--rw) + 36px));max-width:none;padding:14px 18px 0;overflow:hidden}
+#reader.paged .r-cols{transition:transform .25s ease;will-change:transform}
+#reader.paged .r-text p{break-inside:auto;orphans:2;widows:2}
+#reader.paged .r-end{break-inside:avoid;margin-top:1.6em}
+.r-pg{font-size:.86rem;color:var(--muted);font-variant-numeric:tabular-nums;text-align:center;flex:1}
+.r-pg .bar{display:block;flex:none;width:100%;max-width:12rem;margin:4px auto 0}
+
+/* Sheets & modal */
+.scrim{position:fixed;inset:0;z-index:40;background:color-mix(in srgb,#000 38%,transparent);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);color:var(--fg);width:100%;max-width:40rem;max-height:78vh;overflow:auto;border-radius:12px 12px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 18px);display:grid;gap:12px;align-content:start}
+.sheet h3{margin:0;font-size:1.15rem;font-weight:400}
+.sheet .toc li{padding-left:2px}
+.modal{align-items:center;padding:16px}
+.modal .card{background:var(--surface);border-radius:10px;padding:18px;max-width:26rem;width:100%;display:grid;gap:14px;border:1px solid var(--line)}
+.modal .card p{margin:0}
+.modal .row2{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);z-index:60;background:var(--fg);color:var(--bg);padding:.5em 1em;border-radius:8px;font-size:.95rem;max-width:calc(100% - 32px);text-align:center}
+
+/* Lock */
+#lock{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:auto}
+.lock-box{width:100%;max-width:22rem;display:grid;gap:14px;text-align:center}
+.lock-box h1{margin:0;font-size:2.2rem;font-weight:400;letter-spacing:.02em}
+.lock-box .rule{width:3rem;height:1px;background:var(--fg);margin:0 auto}
+.lock-box .field{text-align:center;font-size:1.25rem;letter-spacing:.12em}
+.lock-box .err{color:var(--danger);min-height:1.4em;margin:0;font-size:.95rem}
+.lock-box .hint{text-align:left}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="lock" hidden></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<script>window.__TT_HOSTED = true;</script>
+<script src="config.js"></script>
+<script>
+'use strict';
+/* Tủ truyện — thư viện truyện riêng tư, mã hoá, đọc offline, đồng bộ Google Drive */
+(function(){
+const VERSION = '1.0.0';
+const HOSTED = !!window.__TT_HOSTED;
+const CFG = window.TU_TRUYEN_CONFIG || {};
+const MAMMOTH_URL = HOSTED ? 'https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js' : 'https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js';
+const SCOPE = 'https://www.googleapis.com/auth/drive.appdata openid email profile';
+const LIB_FILE = 'tu-truyen-thu-vien.json', STATE_FILE = 'tu-truyen-trang-thai.json';
+const ITER = 210000;
+
+/* ---------- tiện ích ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+const fold = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'd').toLowerCase().trim();
+const te = new TextEncoder(), td = new TextDecoder();
+const rand = n => crypto.getRandomValues(new Uint8Array(n));
+const b64 = buf => { const u = buf instanceof Uint8Array ? buf : new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
+const unb64 = s => { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; };
+const fmtTime = t => t ? new Date(t).toLocaleString('vi-VN', {hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit', year:'numeric'}) : '—';
+const fmtAgo = t => { if (!t) return 'chưa bao giờ'; const m = Math.round((Date.now() - t) / 60000); if (m < 1) return 'vừa xong'; if (m < 60) return m + ' phút trước'; const h = Math.round(m / 60); if (h < 24) return h + ' giờ trước'; return fmtTime(t); };
+const LS = {
+  get(k, d){ try { const v = localStorage.getItem('tt:' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v){ try { localStorage.setItem('tt:' + k, JSON.stringify(v)); } catch {} },
+  del(k){ try { localStorage.removeItem('tt:' + k); } catch {} }
+};
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+/* ---------- mã hoá ---------- */
+const Vault = { key: null, syncKey: null };
+async function pbkdf2(pass, salt, iter){
+  const base = await crypto.subtle.importKey('raw', te.encode(pass), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations: iter, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
+}
+async function aesEnc(key, bytes){ const iv = rand(12); const c = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, bytes); return {iv, c: new Uint8Array(c)}; }
+async function aesDec(key, iv, c){ return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, c)); }
+const importAes = raw => crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt','decrypt']);
+async function sealJSON(key, obj){ const {iv, c} = await aesEnc(key, te.encode(JSON.stringify(obj))); return {iv: b64(iv), c: b64(c)}; }
+async function openJSON(key, box){ return JSON.parse(td.decode(await aesDec(key, unb64(box.iv), unb64(box.c)))); }
+
+/* ---------- cơ sở dữ liệu (IndexedDB, mọi bản ghi được mã hoá) ---------- */
+const STORES = {stories:'id', chapters:'id', texts:'id', progress:'storyId', kv:'k'};
+const DB = {
+  db: null, mem: Object.fromEntries(Object.keys(STORES).map(k => [k, new Map()])),
+  async open(){
+    try {
+      this.db = await new Promise((res, rej) => {
+        const r = indexedDB.open('tu-truyen', 1);
+        r.onupgradeneeded = () => { const d = r.result; for (const [n, k] of Object.entries(STORES)) if (!d.objectStoreNames.contains(n)) d.createObjectStore(n, {keyPath: k}); };
+        r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); r.onblocked = () => rej(new Error('blocked'));
+      });
+    } catch { this.db = null; }
+  },
+  _all(s){ if (!this.db) return Promise.resolve([...this.mem[s].values()]); return new Promise((res, rej) => { const q = this.db.transaction(s).objectStore(s).getAll(); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); },
+  _get(s, k){ if (!this.db) return Promise.resolve(this.mem[s].get(k)); return new Promise((res, rej) => { const q = this.db.transaction(s).objectStore(s).get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); },
+  _put(s, items){ if (!this.db){ items.forEach(i => this.mem[s].set(i[STORES[s]], i)); return Promise.resolve(); } return new Promise((res, rej) => { const t = this.db.transaction(s, 'readwrite'); const st = t.objectStore(s); items.forEach(i => st.put(i)); t.oncomplete = () => res(); t.onerror = () => rej(t.error); }); },
+  del(s, keys){ keys = [].concat(keys); if (!this.db){ keys.forEach(k => this.mem[s].delete(k)); return Promise.resolve(); } return new Promise((res, rej) => { const t = this.db.transaction(s, 'readwrite'); const st = t.objectStore(s); keys.forEach(k => st.delete(k)); t.oncomplete = () => res(); t.onerror = () => rej(t.error); }); },
+  clear(s){ if (!this.db){ this.mem[s].clear(); return Promise.resolve(); } return new Promise((res, rej) => { const t = this.db.transaction(s, 'readwrite'); t.objectStore(s).clear(); t.oncomplete = () => res(); t.onerror = () => rej(t.error); }); },
+  async all(s){ const rows = await this._all(s); return Promise.all(rows.map(r => this._dec(r))); },
+  async get(s, k){ const r = await this._get(s, k); return r ? this._dec(r) : undefined; },
+  async put(s, items){ items = [].concat(items); const kp = STORES[s]; const rows = await Promise.all(items.map(async i => { const {iv, c} = await aesEnc(Vault.key, te.encode(JSON.stringify(i))); return {[kp]: i[kp], iv, c}; })); return this._put(s, rows); },
+  async _dec(r){ return JSON.parse(td.decode(await aesDec(Vault.key, r.iv, r.c))); },
+  async kvGet(k){ const r = await this._get('kv', k); return r ? r.v : undefined; },
+  kvSet(k, v){ return this._put('kv', [{k, v}]); }
+};
+
+/* ---------- trạng thái ---------- */
+const S = { stories: [], chapters: new Map(), progress: new Map(), mode: 'title', q: '', filter: 'all' };
+const live = () => S.stories.filter(s => !s.deleted && !s.trashed && !s.system);
+const trashed = () => S.stories.filter(s => !s.deleted && s.trashed && !s.system);
+
+/* ---------- Bảng thay từ: hiển thị từ dễ đọc thay cho từ gốc, nội dung gốc không đổi ---------- */
+const GLOBAL_ID = '__bang-thay-tu-chung__';
+const globalRec = () => S.stories.find(s => s.id === GLOBAL_ID);
+const termsOf = id => (id === GLOBAL_ID ? globalRec() : S.stories.find(s => s.id === id))?.terms || [];
+async function setTerms(id, terms){
+  const clean = []; const seen = new Set();
+  for (const t of terms){ const from = String(t.from || '').trim(), to = String(t.to ?? '').trim(); if (!from || seen.has(from)) continue; seen.add(from); clean.push({from, to}); }
+  if (id === GLOBAL_ID && !globalRec()) await saveStory({id: GLOBAL_ID, system: true, title: 'Bảng thay từ chung', terms: clean, deleted: false});
+  else await saveStory({id, terms: clean});
+  await loadAll(); TermCache.clear();
+}
+const TermCache = new Map();
+function termRegex(storyId){
+  if (TermCache.has(storyId)) return TermCache.get(storyId);
+  const m = new Map(); for (const t of termsOf(GLOBAL_ID)) m.set(t.from, t.to); for (const t of termsOf(storyId)) m.set(t.from, t.to);
+  let out = null;
+  if (m.size){
+    const keys = [...m.keys()].sort((a, b) => b.length - a.length).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    try { out = {re: new RegExp(`(?<![\\p{L}\\p{N}])(?:${keys.join('|')})(?![\\p{L}\\p{N}])`, 'gu'), m}; }
+    catch { out = {re: new RegExp(keys.join('|'), 'g'), m}; }
+  }
+  TermCache.set(storyId, out); return out;
+}
+const applyTerms = (text, storyId) => { const r = termRegex(storyId); return r ? String(text).replace(r.re, k => r.m.get(k)) : text; };
+const parseTermLines = txt => String(txt || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean).map(l => { const m = l.match(/^(.+?)\s*(?:=>|→|->|=|\t|:)\s*(.*)$/); return m ? {from: m[1].trim(), to: m[2].trim()} : null; }).filter(Boolean);
+const chaptersOf = id => S.chapters.get(id) || [];
+async function loadAll(){
+  const [st, ch, pr] = await Promise.all([DB.all('stories'), DB.all('chapters'), DB.all('progress')]);
+  S.stories = st; S.chapters = new Map();
+  for (const c of ch){ if (c.deleted) continue; if (!S.chapters.has(c.storyId)) S.chapters.set(c.storyId, []); S.chapters.get(c.storyId).push(c); }
+  for (const a of S.chapters.values()) a.sort((x, y) => x.order - y.order);
+  S.progress = new Map(pr.filter(p => !p.deleted).map(p => [p.storyId, p]));
+}
+function progressOf(story){
+  const list = chaptersOf(story.id), p = S.progress.get(story.id);
+  if (!p || !list.length) return {idx: -1, pct: 0, count: list.length, p: null};
+  let idx = list.findIndex(c => c.id === p.chapterId); if (idx < 0) idx = 0;
+  const pct = Math.min(100, Math.round(((idx + (p.ratio || 0)) / list.length) * 100));
+  return {idx, pct, count: list.length, p, done: idx === list.length - 1 && (p.ratio || 0) > .95};
+}
+
+/* ---------- xử lý văn bản & Word ---------- */
+const NUM = '(?:\\d+|[ivxlcdm]+|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)';
+const HEAD_RE = new RegExp('^(?:chương|chuong|chapter|chap\\.?|hồi|quyển|phần|tập)\\s*' + NUM + '(?=$|[\\s:.\\-–—,)])', 'iu');
+const SPECIAL_RE = /^(?:ngoại truyện|phiên ngoại|vĩ thanh|lời mở đầu|mở đầu|tiết tử|lời kết|đoạn kết|phần kết)(?:\s*\d+)?\s*(?:[:.\-–—]\s*.{0,60})?$/iu;
+const isHeading = l => { l = l.trim().replace(/^[^\p{L}\p{N}]+/u, ''); return !!l && l.length <= 120 && (HEAD_RE.test(l) || SPECIAL_RE.test(l)); };
+const cleanText = t => String(t || '').replace(/\r\n?/g, '\n').split('\n').map(s => s.replace(/[\s ]+/g, ' ').trim()).filter(Boolean).join('\n');
+function linesToChapters(items, split, fallbackTitle, dropShortPre){
+  // items: [{text, h}] — h = dòng tiêu đề (Heading trong Word)
+  items = items.filter(i => i.text);
+  if (!items.length) return [];
+  const whole = () => [{title: fallbackTitle || 'Chương 1', content: items.map(i => i.text).join('\n')}];
+  if (!split) return whole();
+  const useH = items.some(i => i.h);
+  const out = []; const pre = []; let cur = null;
+  for (const it of items){
+    if ((useH && it.h) || isHeading(it.text)){
+      if (cur && !cur.body.length && fold(cur.title) === fold(it.text)) continue; // tiêu đề lặp 2 lần liền nhau
+      cur = {title: it.text, body: []}; out.push(cur);
+    }
+    else if (cur) cur.body.push(it.text); else pre.push(it.text);
+  }
+  if (!out.length) return whole();
+  // Vài dòng ngắn trước tiêu đề chương (tên truyện, tên web…) khi dán từ web thì bỏ
+  const preIsJunk = dropShortPre && pre.length <= 4 && pre.every(l => l.length <= 80);
+  if (pre.length && !preIsJunk) out.unshift({title: 'Mở đầu', body: pre});
+  return out.filter(c => c.body.length).map(c => ({title: c.title, content: c.body.join('\n')}));
+}
+/* Dọn chữ thừa khi copy cả trang web: nút điều hướng, bình luận, quảng cáo, đường dẫn… Chỉ bỏ dòng ngắn khớp nguyên dòng. */
+const JUNK = [
+  /^(?:chương|chap|chapter)\s*(?:trước|sau|tiếp(?:\s*theo)?|kế(?:\s*tiếp)?)\b.*$/iu,
+  /^(?:mục lục|danh sách chương|chọn chương|bình luận.*|báo (?:lỗi|cáo).*|theo dõi.*|bỏ theo dõi|đánh dấu.*|cài đặt|cấu hình|tuỳ chỉnh|tùy chỉnh|đăng nhập|đăng ký|đăng xuất|trang chủ|quảng cáo|advertisement|ads|tải app.*|tải ứng dụng.*|chia sẻ.*|share|like|tweet|thích|đề cử.*|tặng quà.*|ủng hộ.*|donate.*|previous|next|prev|top|lên đầu trang|về đầu trang|xem thêm|xem tiếp|đọc tiếp|loading.*|đang tải.*|close|đóng|menu|tìm kiếm.*|search|thể loại.*|tác giả\s*:.*|trạng thái\s*:.*|nghe truyện.*|audio)$/iu,
+  /^(?:lượt (?:xem|đọc|thích)|cập nhật(?: lúc)?|đăng lúc|ngày đăng|số chữ|views?)\b.*$/iu,
+  /^https?:\/\/\S+$/i,
+  /^(?:www\.)?[\w-]+(?:\.[\w-]+)*\.(?:com|net|org|vn|info|me|io|xyz|club|site|top|online|pro|cc|tv)(?:\/\S*)?$/i,
+  /^(?:nguồn|source|copyright|©)\b.{0,100}$/iu,
+  /^[^\n]{0,60}\s[>›»]\s[^\n]{0,60}\s[>›»]\s.*$/u,
+  /^[\d\s\p{P}\p{S}]+$/u
+];
+const SCENE_BREAK = /^(?:[*\-~=•·o.]\s*){3,}$/u;
+const ON_SITE = /(?:bạn đang đọc|đọc truyện|truyện được đăng|truyện chỉ được đăng).{0,120}(?:tại|trên)\s+\S+\.\S+/iu;
+// Cụm nút điều hướng (thường có cả ở trên và dưới phần truyện) và các mốc bắt đầu phần bình luận
+const NAV = /^[<‹«←\s]*(?:mục lục|danh sách chương|chương\s*(?:trước|sau|tiếp(?:\s*theo)?|kế(?:\s*tiếp)?)|trước|sau|tiếp)[\s>›»→]*$/iu;
+const TAIL = /^(?:báo lỗi|cảm ơn|bình luận(?:\s*\(\d+\))?|hướng dẫn nhanh cho người mới đọc|xếp theo|gửi bình luận|viết bình luận|để lại bình luận|bình luận facebook|truyện cùng tác giả|truyện liên quan|có thể bạn thích)$/iu;
+const EXTRA_JUNK = [/^(?:bn|aa|a\+|a-|\+|−)$/i, /^[▶►▸•]\s*\S/u, /^[【\[].{0,200}[】\]]$/u, /(?:\s\|\s.*){2,}/u];
+function cleanWeb(text){
+  const lines = cleanText(text).split('\n'); const removed = [];
+  // 1) Giữ phần nằm giữa cụm điều hướng đầu tiên và cụm cuối cùng
+  let start = 0, end = lines.length;
+  const groups = [];
+  lines.forEach((l, i) => { if (NAV.test(l)){ const g = groups[groups.length - 1]; if (g && i - g.e <= 3) g.e = i; else groups.push({s: i, e: i}); } });
+  if (groups.length >= 2 && groups[groups.length - 1].s - groups[0].e > 3){ start = groups[0].e + 1; end = groups[groups.length - 1].s; }
+  else if (groups.length){ const g = groups[0]; if (g.e < lines.length / 2) start = g.e + 1; else end = g.s; }
+  // 2) Cắt từ mốc phần bình luận trở xuống
+  for (let i = start + 3; i < end; i++) if (TAIL.test(lines[i])){ end = i; break; }
+  removed.push(...lines.slice(0, start), ...lines.slice(end));
+  // 3) Lọc từng dòng thừa còn sót bên trong
+  const kept = lines.slice(start, end).filter(l => {
+    if (SCENE_BREAK.test(l)) return true;
+    if ((l.length <= 120 && (JUNK.some(r => r.test(l)) || EXTRA_JUNK.some(r => r.test(l)))) || (l.length <= 250 && ON_SITE.test(l))){ removed.push(l); return false; }
+    return true;
+  });
+  return {text: kept.join('\n'), removed};
+}
+// Dán MỘT chương từ web: tìm tên chương ở mấy dòng đầu, bỏ các dòng ngắn phía trên nó (tên truyện, tác giả…)
+const stripLead = l => l.replace(/^[^\p{L}\p{N}]+/u, '');
+const CHAP_RE = new RegExp('^(?:chương|chuong|chapter|chap\\.?|hồi)\\s*' + NUM + '(?=$|[\\s:.\\-–—,)])', 'iu');
+const VOL_RE = /^(?:quyển|tập|volume|vol\.)\s*\S/iu;
+const isChap = l => l.length <= 120 && CHAP_RE.test(stripLead(l));
+function parseOneChapter(raw, clean, storyTitle){
+  const r = clean ? cleanWeb(raw) : {text: cleanText(raw), removed: []};
+  let lines = r.text.split('\n').filter(Boolean); let title = '';
+  // Có dòng “Chương …”: bỏ hết phía trên (trừ dòng “Quyển/Tập …”), chọn dòng “Chương” có nhiều nội dung nhất ngay sau nó
+  const cand = clean ? lines.map((l, i) => isChap(l) ? i : -1).filter(i => i >= 0) : [];
+  if (cand.length){
+    let best = cand[0], bestScore = -1;
+    cand.forEach((ci, j) => { const nx = j + 1 < cand.length ? cand[j + 1] : lines.length; const sc = lines.slice(ci + 1, nx).reduce((n, l) => n + l.length, 0); if (sc > bestScore){ bestScore = sc; best = ci; } });
+    const above = lines.slice(0, best);
+    const vols = above.filter(l => l.length <= 120 && VOL_RE.test(stripLead(l)));
+    const keep = vols.length ? [vols[vols.length - 1]] : [];
+    above.forEach(l => { if (!keep.includes(l)) r.removed.push(l); });
+    title = stripLead(lines[best]); title = title.charAt(0).toUpperCase() + title.slice(1);
+    let body = lines.slice(best + 1);
+    while (body.length && fold(stripLead(body[0])) === fold(title)) r.removed.push(body.shift());
+    for (let j = body.length - 1; j >= 0; j--) if (isChap(body[j]) && body.slice(j + 1).join('').length < 200) r.removed.push(...body.splice(j));
+    return {title, content: keep.concat(body).join('\n'), removed: r.removed};
+  }
+  const k = lines.slice(0, 8).findIndex(isHeading);
+  if (k >= 0 && lines.slice(0, k).every(l => l.length <= 80)){
+    r.removed.push(...lines.slice(0, k)); title = lines[k]; lines = lines.slice(k + 1);
+    while (lines.length && fold(lines[0]) === fold(title)) r.removed.push(lines.shift()); // tên chương lặp lại
+  }
+  else if (storyTitle && lines.length && fold(lines[0]) === fold(storyTitle)){ r.removed.push(lines.shift()); }
+  return {title, content: lines.join('\n'), removed: r.removed};
+}
+const textToChapters = (text, split, fb, clean) => {
+  const t = clean ? cleanWeb(text).text : cleanText(text);
+  return linesToChapters(t.split('\n').map(x => ({text: x})), split, fb, !!clean);
+};
+let mammothP = null;
+function ensureMammoth(){
+  if (window.mammoth) return Promise.resolve();
+  if (!mammothP) mammothP = new Promise((res, rej) => {
+    const s = document.createElement('script'); s.src = MAMMOTH_URL; s.onload = () => res();
+    s.onerror = () => { mammothP = null; rej(new Error('Chưa tải được bộ đọc tệp Word. Hãy kết nối mạng một lần rồi thử lại.')); };
+    document.head.appendChild(s);
+  });
+  return mammothP;
+}
+async function docxItems(file){
+  await ensureMammoth();
+  const {value} = await window.mammoth.convertToHtml({arrayBuffer: await file.arrayBuffer()});
+  const doc = new DOMParser().parseFromString(value, 'text/html');
+  return $$('h1,h2,h3,h4,p,li', doc.body).map(el => ({h: /^H[1-3]$/.test(el.tagName), text: el.textContent.replace(/[\s ]+/g, ' ').trim()}));
+}
+// Đọc phần đầu tệp Word do Tủ truyện xuất ra: tên truyện, “Tác giả:”, “Tag:”, “Ghi chú:”
+function extractMeta(items){
+  const META = /^(tác giả|tag|ghi chú)\s*:\s*(.*)$/i; const head = items.slice(0, 6);
+  if (!head.some(i => META.test(i.text))) return null;
+  const meta = {}; let titleIdx = -1;
+  head.forEach((it, i) => { const m = it.text.match(META); if (m){ const k = fold(m[1]); if (k === 'tac gia') meta.author = m[2].trim(); else if (k === 'tag') meta.tags = parseTags(m[2]); else meta.note = m[2].trim(); it._meta = true; } else if (titleIdx < 0 && !meta.author && !meta.tags) titleIdx = i; });
+  if (titleIdx >= 0){ meta.title = head[titleIdx].text; head[titleIdx]._meta = true; }
+  for (let i = items.length - 1; i >= 0; i--) if (items[i]._meta) items.splice(i, 1);
+  return meta;
+}
+async function filesToChapters(files, split){
+  const sorted = [...files].sort((a, b) => a.name.localeCompare(b.name, 'vi', {numeric: true}));
+  let all = [], meta = null;
+  for (const f of sorted){
+    if (!/\.docx$/i.test(f.name)) throw new Error(`“${f.name}” không phải tệp .docx. Nếu là .doc cũ, hãy mở bằng Word và lưu lại dưới dạng .docx.`);
+    const items = await docxItems(f); const m = extractMeta(items); if (m && !meta) meta = m;
+    all = all.concat(linesToChapters(items, split, f.name.replace(/\.docx$/i, '')));
+  }
+  return {chapters: all, meta};
+}
+
+/* ---------- thao tác dữ liệu ---------- */
+let afterChange = () => {};
+async function saveStory(data){
+  const t = Date.now(); const old = data.id ? S.stories.find(s => s.id === data.id) : null;
+  const s = old ? {...old, ...data, updatedAt: t} : {id: uid(), createdAt: t, deleted: false, ...data, updatedAt: t};
+  await DB.put('stories', s); afterChange('lib'); return s;
+}
+async function addChapters(storyId, list){
+  // lấy thứ tự lớn nhất ngay trong bộ nhớ máy (không dựa vào danh sách đang hiển thị, có thể đã cũ)
+  const ex = (await DB.all('chapters')).filter(c => c.storyId === storyId && !c.deleted);
+  let order = ex.reduce((m, c) => Math.max(m, c.order || 0), 0) + 1; const t = Date.now();
+  const metas = [], texts = [];
+  list.forEach((c, i) => { const id = uid(); metas.push({id, storyId, order: order + i, title: c.title, len: c.content.length, updatedAt: t, deleted: false}); texts.push({id, content: c.content}); });
+  await DB.put('texts', texts); await DB.put('chapters', metas); afterChange('lib');
+}
+async function updateChapter(meta, title, content){
+  await DB.put('texts', {id: meta.id, content}); await DB.put('chapters', {...meta, title, len: content.length, updatedAt: Date.now()}); afterChange('lib');
+}
+async function deleteChapter(meta){ await DB.put('chapters', {...meta, deleted: true, updatedAt: Date.now()}); await DB.del('texts', meta.id); afterChange('lib'); }
+async function moveChapter(meta, dir){
+  const list = chaptersOf(meta.storyId); const i = list.findIndex(c => c.id === meta.id); const j = i + dir;
+  if (j < 0 || j >= list.length) return false; const t = Date.now();
+  await DB.put('chapters', [{...list[i], order: list[j].order, updatedAt: t}, {...list[j], order: list[i].order, updatedAt: t}]); afterChange('lib'); return true;
+}
+async function trashStory(id){ const s = S.stories.find(x => x.id === id); await DB.put('stories', {...s, trashed: true, trashedAt: Date.now(), updatedAt: Date.now()}); afterChange('lib'); }
+async function restoreStory(id){ const s = S.stories.find(x => x.id === id); await DB.put('stories', {...s, trashed: false, updatedAt: Date.now()}); afterChange('lib'); }
+async function deleteStory(id){
+  const t = Date.now(); const s = S.stories.find(x => x.id === id);
+  await DB.put('stories', {...s, deleted: true, updatedAt: t});
+  const all = (await DB.all('chapters')).filter(c => c.storyId === id && !c.deleted);
+  if (all.length){ await DB.put('chapters', all.map(c => ({...c, deleted: true, updatedAt: t}))); await DB.del('texts', all.map(c => c.id)); }
+  await DB.put('progress', {storyId: id, deleted: true, updatedAt: t}); afterChange('lib');
+}
+async function saveProgress(storyId, chapterId, ratio){
+  const p = {storyId, chapterId, ratio: Math.max(0, Math.min(1, ratio || 0)), updatedAt: Date.now()};
+  S.progress.set(storyId, p); await DB.put('progress', p); // chỉ lưu trên máy này, không gửi lên Google
+}
+async function snapshot(){
+  const [stories, chapters, progress, texts] = await Promise.all([DB.all('stories'), DB.all('chapters'), DB.all('progress'), DB.all('texts')]);
+  const tm = new Map(texts.map(t => [t.id, t.content]));
+  return {stories, chapters: chapters.map(c => c.deleted ? c : {...c, content: tm.get(c.id) ?? ''}), progress};
+}
+function mergeRecords(localArr, remoteArr, key){
+  const L = new Map(localArr.map(r => [r[key], r])), R = new Map(remoteArr.map(r => [r[key], r]));
+  const out = new Map(L), toLocal = []; let remoteBehind = false;
+  for (const [k, r] of R){ const l = L.get(k); if (!l || (r.updatedAt || 0) > (l.updatedAt || 0)){ out.set(k, r); toLocal.push(r); } }
+  for (const [k, l] of L){ const r = R.get(k); if (!r || (l.updatedAt || 0) > (r.updatedAt || 0)) remoteBehind = true; }
+  return {merged: [...out.values()], toLocal, remoteBehind};
+}
+async function applyRecords({stories = [], chapters = [], progress = []}){
+  if (stories.length) await DB.put('stories', stories);
+  if (chapters.length){
+    const metas = chapters.map(({content, ...m}) => m);
+    const texts = chapters.filter(c => !c.deleted).map(c => ({id: c.id, content: c.content || ''}));
+    if (texts.length) await DB.put('texts', texts);
+    const dead = chapters.filter(c => c.deleted).map(c => c.id); if (dead.length) await DB.del('texts', dead);
+    await DB.put('chapters', metas);
+  }
+  if (progress.length) await DB.put('progress', progress);
+}
+
+/* ---------- khoá ứng dụng ---------- */
+async function createLock(kind, pass){
+  const salt = rand(16), raw = rand(32); const pk = await pbkdf2(pass, salt, ITER); const w = await aesEnc(pk, raw);
+  const lock = {kind, salt: b64(salt), iter: ITER, iv: b64(w.iv), wrapped: b64(w.c), createdAt: Date.now()};
+  await DB.kvSet('lock', lock); Vault.key = await importAes(raw); raw.fill(0); return lock;
+}
+async function unwrap(pass){
+  const lock = await DB.kvGet('lock'); if (!lock) return null;
+  try { const pk = await pbkdf2(pass, unb64(lock.salt), lock.iter); return await aesDec(pk, unb64(lock.iv), unb64(lock.wrapped)); } catch { return null; }
+}
+async function deriveSyncKey(pass){ const a = Auth.info; Vault.syncKey = a ? await pbkdf2(pass, te.encode('tu-truyen-sync|' + a.email.toLowerCase()), ITER) : null; if (Lock.remember) await rememberKeys(); }
+/* “Không khoá”: khoá giải mã được cất trong trình duyệt của máy này dưới dạng không xuất ra được; dữ liệu vẫn mã hoá. */
+async function rememberKeys(){ await DB.kvSet('remember', {key: Vault.key, sync: Vault.syncKey || null}); Lock.remember = true; }
+async function forgetKeys(){ await DB.del('kv', 'remember'); Lock.remember = false; }
+async function changeLock(oldp, kind, newp){
+  const raw = await unwrap(oldp); if (!raw) return false;
+  const salt = rand(16); const pk = await pbkdf2(newp, salt, ITER); const w = await aesEnc(pk, raw); raw.fill(0);
+  await DB.kvSet('lock', {kind, salt: b64(salt), iter: ITER, iv: b64(w.iv), wrapped: b64(w.c), createdAt: Date.now()});
+  if (Auth.info){ await deriveSyncKey(newp); LS.set('forceNext', true); afterChange('lib'); afterChange('state'); }
+  return true;
+}
+const validPass = (kind, p) => kind === 'pin' ? /^\d{6,}$/.test(p) : p.length >= 8;
+const passRule = kind => kind === 'pin' ? 'Mã PIN gồm ít nhất 6 chữ số.' : 'Mật khẩu dài ít nhất 8 ký tự.';
+
+/* ---------- giao diện chung ---------- */
+const app = () => $('#app');
+function toast(msg, ms = 2600){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, ms); }
+function modal(html, onMount){
+  return new Promise(res => {
+    const m = document.createElement('div'); m.className = 'scrim modal'; m.innerHTML = `<div class="card" role="dialog" aria-modal="true">${html}</div>`;
+    document.body.appendChild(m); const done = v => { m.remove(); res(v); };
+    m.addEventListener('click', e => { if (e.target === m) done(null); const b = e.target.closest('[data-r]'); if (b) done(b.dataset.r === 'ok' ? (onMount?.value?.() ?? true) : null); });
+    m.addEventListener('keydown', e => { if (e.key === 'Escape') done(null); });
+    onMount?.(m, done); (m.querySelector('input,textarea') || m.querySelector('[data-r="ok"]'))?.focus();
+  });
+}
+const ask = (msg, ok = 'Đồng ý', danger = false) => modal(`<p>${msg}</p><div class="row2"><button class="btn" data-r="no">Huỷ</button><button class="btn ${danger ? 'danger' : 'primary'}" data-r="ok">${esc(ok)}</button></div>`);
+function askPass(msg, ok = 'Xác nhận', kind){
+  const mount = (m, done) => { const f = m.querySelector('form'); f.onsubmit = e => { e.preventDefault(); done(f.querySelector('input').value); }; };
+  mount.value = () => document.querySelector('.modal input')?.value;
+  return modal(`<form class="form" style="padding:0"><p>${msg}</p><input class="field" id="modal-pass" type="password" ${kind === 'pin' ? 'inputmode="numeric"' : ''} autocomplete="current-password" required><div class="row2"><button type="button" class="btn" data-r="no">Huỷ</button><button class="btn primary" type="submit">${esc(ok)}</button></div></form>`, mount);
+}
+
+/* ---------- điều hướng ---------- */
+let current = {view: 'library', params: {}};
+function go(view, params = {}, push = true){
+  if (current.view === 'reader' && view !== 'reader') Reader.close();
+  current = {view, params};
+  if (push) try { history.pushState({view, params}, ''); } catch {}
+  render();
+}
+window.addEventListener('popstate', e => { if (!Vault.key) return; const st = e.state; if (current.view === 'reader') Reader.close(); current = st && st.view ? st : {view: 'library', params: {}}; render(); });
+function render(){
+  if (!Vault.key) return;
+  const v = current.view, p = current.params;
+  if (v === 'reader') return Reader.open(p.storyId, p.chapterId, p.ratio);
+  app().innerHTML = '';
+  ({library: Library, story: StoryView, editStory: StoryForm, addChapters: ChapterAdd, editChapter: ChapterEdit, settings: Settings, trash: TrashView, terms: TermsView})[v]?.(p);
+  window.scrollTo(0, p._scroll || 0);
+}
+
+/* ---------- Kệ truyện ---------- */
+function Library(){
+  const root = app(); const syncHtml = Sync.chipHtml();
+  root.innerHTML = `<div class="wrap">
+  <header class="top"><h1>Tủ truyện</h1><div class="top-actions">${syncHtml}<button class="btn primary" data-act="new">Thêm truyện</button><button class="btn" data-act="settings">Cài đặt</button>${Lock.remember ? '' : '<button class="btn" data-act="lock" title="Khoá ngay">Khoá</button>'}</div></header>
+  <div id="cont"></div>
+  <div class="search">
+    <div class="seg" role="group" aria-label="Kiểu tìm kiếm">
+      <button data-mode="title" aria-pressed="${S.mode === 'title'}">Tên truyện</button><button data-mode="author" aria-pressed="${S.mode === 'author'}">Tác giả</button><button data-mode="tag" aria-pressed="${S.mode === 'tag'}">Tag</button>
+    </div>
+    <input id="q" class="field" type="search" autocomplete="off" value="${esc(S.q)}">
+    <div id="tagcloud" class="tags"></div>
+  </div>
+  <div class="filters" role="group" aria-label="Lọc">
+    ${[['all','Tất cả'],['reading','Đang đọc'],['unread','Chưa đọc'],['done','Đã đọc xong']].map(([k,l]) => `<button data-filter="${k}" aria-pressed="${S.filter === k}">${l}</button>`).join('')}
+  </div>
+  <p id="count" class="muted small" style="margin:10px 0 0"></p>
+  <ul class="shelf" id="shelf"></ul>
+  ${trashed().length ? `<p style="margin-top:18px"><button class="link" data-act="trash">Thùng rác · ${trashed().length} truyện</button></p>` : ''}
+  </div>`;
+  const q = $('#q', root);
+  const ph = {title: 'Gõ tên truyện…', author: 'Gõ tên tác giả…', tag: 'Gõ tag, hoặc chọn bên dưới…'};
+  q.placeholder = ph[S.mode];
+  q.addEventListener('input', () => { S.q = q.value; drawShelf(); });
+  root.addEventListener('click', async e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.mode){ S.mode = b.dataset.mode; S.q = ''; current.params = {}; Library(); $('#q').focus(); return; }
+    if (b.dataset.filter){ S.filter = b.dataset.filter; $$('[data-filter]').forEach(x => x.setAttribute('aria-pressed', x === b)); drawShelf(); return; }
+    if (b.dataset.tagpick != null){ S.q = b.dataset.tagpick; q.value = S.q; drawShelf(); return; }
+    if (b.dataset.open) return go('story', {id: b.dataset.open});
+    if (b.dataset.cont){ const s = S.stories.find(x => x.id === b.dataset.cont); const p = S.progress.get(s.id); return go('reader', {storyId: s.id, chapterId: p?.chapterId, ratio: p?.ratio}); }
+    const act = b.dataset.act;
+    if (act === 'new') go('editStory', {});
+    if (act === 'settings') go('settings');
+    if (act === 'lock') Lock.lock();
+    if (act === 'sync') Sync.manual();
+    if (act === 'backup') exportBackup();
+    if (act === 'trash') go('trash');
+  });
+  drawContinue(); drawShelf();
+}
+function drawContinue(){
+  const el = $('#cont'); if (!el) return;
+  const withP = live().map(s => ({s, p: S.progress.get(s.id)})).filter(x => x.p && chaptersOf(x.s.id).length).sort((a, b) => b.p.updatedAt - a.p.updatedAt);
+  const top = withP.find(x => !progressOf(x.s).done);
+  const lb = LS.get('lastBackup', 0);
+  const nudge = live().length && Date.now() - lb > 14 * 864e5 ? `<div class="continue"><span class="muted small">${lb ? 'Đã hơn 2 tuần chưa xuất bản sao lưu.' : 'Chưa có bản sao lưu nào.'} Nên cất một bản phòng khi mất máy.</span><button class="btn" data-act="backup">Sao lưu ngay</button></div>` : '';
+  if (!top){ el.innerHTML = nudge; return; }
+  const pr = progressOf(top.s); const ch = chaptersOf(top.s.id)[pr.idx];
+  el.innerHTML = nudge + `<div class="continue"><div><span class="sc muted small">Đọc tiếp</span><b>${esc(top.s.title)}</b><span class="muted small">${esc(ch?.title || '')} · ${pr.pct}%</span></div><button class="btn primary" data-cont="${top.s.id}">Mở chương đang đọc</button></div>`;
+}
+function matches(s){
+  const q = fold(S.q); if (!q) return true;
+  if (S.mode === 'title') return fold(s.title).includes(q);
+  if (S.mode === 'author') return fold(s.author).includes(q);
+  return (s.tags || []).some(t => fold(t).includes(q));
+}
+function drawShelf(){
+  const shelf = $('#shelf'); if (!shelf) return;
+  if (S.mode === 'tag'){
+    const counts = new Map(); live().forEach(s => (s.tags || []).forEach(t => counts.set(t, (counts.get(t) || 0) + 1)));
+    const qf = fold(S.q); const tags = [...counts].filter(([t]) => !qf || fold(t).includes(qf)).sort((a, b) => a[0].localeCompare(b[0], 'vi'));
+    $('#tagcloud').innerHTML = tags.length ? tags.map(([t, n]) => `<button class="tag" data-tagpick="${esc(t)}" aria-pressed="${fold(t) === qf}">${esc(t)} <span class="muted">${n}</span></button>`).join('') : `<span class="muted small">Chưa có tag nào khớp.</span>`;
+  } else $('#tagcloud').innerHTML = '';
+  const last = s => Math.max(s.updatedAt || 0, S.progress.get(s.id)?.updatedAt || 0);
+  let list = live().filter(matches).filter(s => {
+    if (S.filter === 'all') return true; const pr = progressOf(s);
+    if (S.filter === 'unread') return !pr.p; if (S.filter === 'done') return !!pr.done; return !!pr.p && !pr.done;
+  }).sort((a, b) => last(b) - last(a));
+  $('#count').textContent = live().length ? `${list.length} / ${live().length} truyện` : '';
+  if (!live().length){ shelf.innerHTML = `<li class="empty">Tủ truyện đang trống.<br><button class="btn primary" style="margin-top:12px" data-act="new">Thêm truyện đầu tiên</button></li>`; return; }
+  if (!list.length){ shelf.innerHTML = `<li class="empty">Không có truyện nào khớp.</li>`; return; }
+  shelf.innerHTML = list.map(s => {
+    const pr = progressOf(s);
+    const prog = !pr.count ? 'Chưa có chương' : pr.p ? (pr.done ? `Đã đọc xong · ${pr.count} chương` : `Chương ${pr.idx + 1}/${pr.count} · ${pr.pct}%`) : `${pr.count} chương · chưa đọc`;
+    return `<li><button class="row" data-open="${s.id}"><span class="r-t">${esc(s.title)}</span>${s.author ? `<span class="r-a">${esc(s.author)}</span>` : ''}${(s.tags || []).length ? `<span class="r-g">${s.tags.map(esc).join(' · ')}</span>` : ''}<span class="r-p num"><span class="bar"><i style="width:${pr.done ? 100 : pr.pct}%"></i></span>${prog}</span></button></li>`;
+  }).join('');
+}
+
+/* ---------- Trang truyện ---------- */
+function StoryView({id}){
+  const s = S.stories.find(x => x.id === id && !x.deleted && !x.trashed); if (!s) return go('library', {}, false);
+  const list = chaptersOf(id), pr = progressOf(s);
+  app().innerHTML = `<div class="wrap">
+  <header class="top"><button class="link" data-act="back">← Tủ truyện</button><div class="top-actions"><button class="btn" data-act="terms">Thay từ (${(s.terms || []).length})</button><button class="btn" data-act="word">Tải về Word</button><button class="btn" data-act="edit">Sửa thông tin</button></div></header>
+  <div class="story-head">
+    <h1>${esc(s.title)}</h1>${s.author ? `<p class="by">${esc(s.author)}</p>` : ''}
+    ${(s.tags || []).length ? `<div class="tags">${s.tags.map(t => `<button class="tag" data-tag="${esc(t)}">${esc(t)}</button>`).join('')}</div>` : ''}
+    ${s.note ? `<p class="note">${esc(s.note)}</p>` : ''}
+  </div>
+  <div class="actions">
+    ${list.length ? (pr.p ? `<button class="btn primary big" data-act="cont">Đọc tiếp · ${esc(list[pr.idx].title)}</button><button class="btn big" data-act="start">Đọc từ đầu</button>` : `<button class="btn primary big" data-act="start">Bắt đầu đọc</button>`) : ''}
+  </div>
+  ${pr.p ? `<div class="meta-line num"><span class="bar"><i style="width:${pr.done ? 100 : pr.pct}%"></i></span><span>${pr.done ? 'Đã đọc xong' : pr.pct + '%'} · đọc lần cuối ${fmtAgo(pr.p.updatedAt)}</span></div>` : ''}
+  <details class="quick" id="qa" ${LS.get('qaOpen', true) ? 'open' : ''}>
+    <summary class="sec" style="cursor:pointer;list-style:none"><h2>Thêm chương nhanh</h2><span class="muted small">dán từ web · bấm để ${LS.get('qaOpen', true) ? 'thu gọn' : 'mở'}</span></summary>
+    <div class="form" style="padding-block:12px 4px;gap:10px">
+      <textarea id="qa-text" class="field" rows="5" placeholder="Trên web: chọn tất cả (Ctrl+A) → sao chép (Ctrl+C). Rồi dán (Ctrl+V) vào đây."></textarea>
+      <label style="display:grid;gap:4px"><span>Tên chương</span><input id="qa-title" class="field" placeholder="Chương ${list.length + 1}"></label>
+      <div id="qa-prev" class="hint">Hình ảnh được tự bỏ, chữ giữ nguyên để bạn tự sửa. Lưu xong ô dán trống sẵn cho chương tiếp theo.</div>
+      <div class="form-actions" style="align-items:center"><input type="checkbox" id="qa-clean" hidden><button class="btn primary big" id="qa-save" type="button">Lưu chương</button></div>
+    </div>
+  </details>
+  <div class="sec"><h2>Mục lục <span class="muted small">${list.length} chương</span></h2><button class="btn" data-act="add">Thêm nhiều chương / tệp Word</button></div>
+  ${list.length ? '<p class="hint" style="margin:8px 0 0">Bấm tên chương để đọc, bấm <b>Sửa</b> để sửa nội dung, đổi thứ tự hoặc xoá chương. Sửa tên truyện, tác giả, tag: nút <b>Sửa thông tin</b> ở trên cùng.</p>' : ''}
+  ${list.length ? `<ol class="toc">${list.map((c, i) => `<li class="${i < pr.idx ? 'read' : ''} ${i === pr.idx ? 'cur' : ''}"><button class="go" data-ch="${c.id}"><span class="n">${i + 1}</span><span class="t">${esc(c.title)}</span></button><button class="ed" data-edit="${c.id}" aria-label="Sửa ${esc(c.title)}">Sửa</button></li>`).join('')}</ol>` : `<p class="empty">Truyện chưa có chương nào. Bấm “Thêm chương” để dán nội dung hoặc tải tệp Word.</p>`}
+  </div>`;
+  wireQuickAdd(id, list.length);
+  app().onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.ch) return go('reader', {storyId: id, chapterId: b.dataset.ch, ratio: pr.p?.chapterId === b.dataset.ch ? pr.p.ratio : 0});
+    if (b.dataset.edit) return go('editChapter', {id: b.dataset.edit, storyId: id});
+    if (b.dataset.tag){ S.mode = 'tag'; S.q = b.dataset.tag; S.filter = 'all'; return go('library'); }
+    const a = b.dataset.act;
+    if (a === 'back') history.length > 1 ? history.back() : go('library');
+    if (a === 'edit') go('editStory', {id});
+    if (a === 'word') exportWordOne(s);
+    if (a === 'terms') go('terms', {id});
+    if (a === 'add') go('addChapters', {storyId: id});
+    if (a === 'cont') go('reader', {storyId: id, chapterId: pr.p.chapterId, ratio: pr.p.ratio});
+    if (a === 'start') go('reader', {storyId: id, chapterId: list[0].id, ratio: 0});
+  };
+}
+
+/* ---------- Dán từ web: chỉ bỏ hình ảnh, giữ nguyên chữ ---------- */
+const MEDIA = 'img,picture,svg,video,audio,iframe,canvas,object,embed,figure,script,style,noscript';
+function htmlToTextNoImages(html){
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  doc.querySelectorAll(MEDIA).forEach(n => n.remove());
+  const box = document.createElement('div');
+  box.style.cssText = 'position:fixed;left:-99999px;top:0;width:800px;white-space:normal';
+  box.innerHTML = doc.body.innerHTML; document.body.appendChild(box);
+  const t = box.innerText; box.remove(); return t;
+}
+document.addEventListener('paste', e => {
+  const ta = e.target.closest?.('textarea.field'); if (!ta) return;
+  const html = e.clipboardData?.getData('text/html');
+  if (!html || !/<(?:img|picture|svg|video|iframe|figure|canvas)\b/i.test(html)) return; // không có hình thì dán bình thường
+  e.preventDefault();
+  ta.setRangeText(htmlToTextNoImages(html), ta.selectionStart, ta.selectionEnd, 'end');
+  ta.dispatchEvent(new Event('input', {bubbles: true}));
+});
+
+/* ---------- Màn hình Bảng thay từ ---------- */
+function termModal(from, to, scope){
+  return modal(`<form class="form" style="padding:0" id="tm"><p style="margin:0"><b>Thay từ</b></p>
+    <label><span>Từ gốc (đúng như trong truyện)</span><input class="field" id="tm-from" value="${esc(from)}" required></label>
+    <label><span>Hiển thị thành</span><input class="field" id="tm-to" value="${esc(to)}" placeholder="Để trống = ẩn từ này"></label>
+    ${scope ? `<div class="seg"><button type="button" data-sc="story" aria-pressed="true">Chỉ truyện này</button><button type="button" data-sc="all" aria-pressed="false">Mọi truyện</button></div>` : ''}
+    <p class="hint">Phân biệt chữ hoa, chữ thường. Chỉ thay khi là nguyên từ, không thay khi nằm giữa một từ khác.</p>
+    <div class="row2"><button type="button" class="btn" data-r="no">Huỷ</button><button class="btn primary" type="submit">Lưu</button></div></form>`, (m, done) => {
+    let sc = scope || 'story';
+    m.querySelectorAll('[data-sc]').forEach(b => b.onclick = () => { sc = b.dataset.sc; m.querySelectorAll('[data-sc]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+    m.querySelector('form').onsubmit = e => { e.preventDefault(); const f = m.querySelector('#tm-from').value.trim(); if (!f) return; done({from: f, to: m.querySelector('#tm-to').value.trim(), scope: sc}); };
+    setTimeout(() => m.querySelector('#tm-to').focus(), 30);
+  });
+}
+function TermsView({id}){
+  const isG = id === GLOBAL_ID; const s = isG ? null : S.stories.find(x => x.id === id);
+  if (!isG && !s) return go('library', {}, false);
+  const list = [...termsOf(id)].sort((a, b) => a.from.localeCompare(b.from, 'vi'));
+  app().innerHTML = `<div class="wrap">
+  <header class="top"><button class="link" data-act="back">← Quay lại</button><h1 style="font-size:1.25rem">Bảng thay từ</h1></header>
+  <div class="story-head" style="padding-block:16px 0"><p class="by" style="font-style:normal">${isG ? 'Áp dụng cho <b>mọi truyện</b>' : `Riêng cho <b>${esc(s.title)}</b>`} · ${list.length} cặp từ</p>
+  <p class="hint">Khi đọc và khi xuất Word, từ gốc được hiển thị thành từ bạn chọn. Nội dung gốc của truyện không bị sửa, nên xoá một cặp từ là truyện về như cũ.${isG ? '' : ' Nếu một từ có trong cả bảng chung và bảng riêng, bảng riêng được dùng.'}</p>
+  ${isG ? '' : `<p style="margin:0"><button class="link" data-act="global">Mở bảng thay từ chung (${termsOf(GLOBAL_ID).length})</button></p>`}</div>
+  <form class="form" id="t-add" style="padding-block:14px 6px">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end">
+      <label><span>Từ gốc</span><input id="t-from" class="field" required></label><span style="padding-bottom:.5em">→</span>
+      <label><span>Hiển thị thành</span><input id="t-to" class="field"></label>
+    </div>
+    <div class="form-actions"><button class="btn primary" type="submit">Thêm cặp từ</button><button class="btn" type="button" data-act="bulk">Dán nhiều cặp cùng lúc</button></div>
+  </form>
+  <div id="t-bulk" hidden class="form" style="padding-block:6px">
+    <label><span>Mỗi dòng một cặp: từ gốc = từ mới</span><textarea id="t-lines" class="field" rows="8" placeholder="Ví dụ:&#10;Lâm Phong = Phong&#10;sư tôn = thầy"></textarea></label>
+    <div class="form-actions"><button class="btn primary" type="button" data-act="bulksave">Thêm các cặp này</button><button class="btn" type="button" data-act="copyall">Hiện toàn bộ bảng để sao chép</button></div>
+  </div>
+  <div class="field" style="padding:0;border:0;background:none">
+    <input id="t-q" class="field" type="search" placeholder="Tìm trong bảng…" ${list.length > 8 ? '' : 'hidden'}>
+  </div>
+  <div id="t-list">${list.length ? list.map(t => `<div class="dev" data-from="${esc(t.from)}"><div><b>${esc(t.from)}</b> <span class="muted">→</span> ${t.to ? esc(t.to) : '<i class="muted">(ẩn)</i>'}</div><div style="display:flex;gap:6px"><button class="btn" data-edit-t="${esc(t.from)}">Sửa</button><button class="btn danger" data-del-t="${esc(t.from)}">Xoá</button></div></div>`).join('') : '<p class="empty">Chưa có cặp từ nào. Khi đang đọc, bôi đen một từ rồi bấm “Thay từ này” để thêm nhanh.</p>'}</div>
+  </div>`;
+  const root = app();
+  $('#t-q', root)?.addEventListener('input', e => { const q = fold(e.target.value); $$('#t-list .dev', root).forEach(d => d.hidden = q && !fold(d.textContent).includes(q)); });
+  $('#t-add', root).onsubmit = async e => { e.preventDefault(); const from = $('#t-from').value.trim(); if (!from) return; await setTerms(id, termsOf(id).filter(t => t.from !== from).concat({from, to: $('#t-to').value.trim()})); toast('Đã thêm'); TermsView({id}); $('#t-from').focus(); };
+  root.onclick = async e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.delT != null){ await setTerms(id, termsOf(id).filter(t => t.from !== b.dataset.delT)); toast('Đã xoá'); return TermsView({id}); }
+    if (b.dataset.editT != null){ const t = termsOf(id).find(x => x.from === b.dataset.editT); const r = await termModal(t.from, t.to); if (!r) return; await setTerms(id, termsOf(id).filter(x => x.from !== t.from && x.from !== r.from).concat({from: r.from, to: r.to})); return TermsView({id}); }
+    const a = b.dataset.act;
+    if (a === 'back') return history.length > 1 ? history.back() : go('library');
+    if (a === 'global') return go('terms', {id: GLOBAL_ID});
+    if (a === 'bulk'){ $('#t-bulk').hidden = !$('#t-bulk').hidden; return; }
+    if (a === 'copyall'){ $('#t-lines').value = termsOf(id).map(t => `${t.from} = ${t.to}`).join('\n'); $('#t-lines').select(); return; }
+    if (a === 'bulksave'){
+      const add = parseTermLines($('#t-lines').value); if (!add.length) return toast('Không đọc được cặp nào. Mỗi dòng dạng: từ gốc = từ mới');
+      const keys = new Set(add.map(t => t.from)); await setTerms(id, termsOf(id).filter(t => !keys.has(t.from)).concat(add)); toast(`Đã thêm ${add.length} cặp từ`); return TermsView({id});
+    }
+  };
+}
+
+/* ---------- Thêm chương nhanh (dán từng chương từ web) ---------- */
+function wireQuickAdd(storyId, count){
+  const box = $('#qa'); if (!box) return;
+  const ta = $('#qa-text'), ti = $('#qa-title'), pv = $('#qa-prev'), cl = $('#qa-clean'), save = $('#qa-save');
+  let parsed = [], removed = [], titleTouched = false;
+  box.addEventListener('toggle', () => { LS.set('qaOpen', box.open); const s = box.querySelector('summary span'); if (s) s.textContent = `dán từ web · bấm để ${box.open ? 'thu gọn' : 'mở'}`; });
+  const fallback = () => `Chương ${count + 1}`;
+  const storyTitle = S.stories.find(x => x.id === storyId)?.title;
+  const update = () => {
+    const raw = ta.value; if (!raw.trim()){ parsed = []; pv.textContent = 'Hình ảnh được tự bỏ, chữ giữ nguyên để bạn tự sửa. Lưu xong ô dán trống sẵn cho chương tiếp theo.'; return; }
+    // Giữ nguyên toàn bộ chữ; chỉ gợi ý tên chương từ dòng “Chương …” đầu tiên
+    let lines = cleanText(raw).split('\n'); const h = lines.slice(0, 40).find(l => isChap(l) || isHeading(l)) || '';
+    let t = stripLead(h); t = t ? t.charAt(0).toUpperCase() + t.slice(1) : '';
+    if (!titleTouched) ti.value = t;
+    if (t && lines.length && fold(stripLead(lines[0])) === fold(t)) lines = lines.slice(1); // dòng đầu chính là tên chương
+    parsed = lines.length ? [{title: ti.value.trim() || fallback(), content: lines.join('\n')}] : [];
+    const c = parsed[0]?.content || ''; const firstL = c.split('\n')[0], lastL = c.split('\n').slice(-1)[0];
+    pv.innerHTML = `Sẽ thêm <b>${esc(ti.value.trim() || fallback())}</b> · ${c.length.toLocaleString('vi-VN')} ký tự<br><span class="small">Dòng đầu: “${esc(firstL.slice(0, 80))}${firstL.length > 80 ? '…' : ''}”<br>Dòng cuối: “${esc(lastL.slice(0, 80))}${lastL.length > 80 ? '…' : ''}”</span><br><span class="small muted">Bạn có thể xoá bớt chữ thừa ngay trong ô dán trước khi lưu, hoặc sửa sau bằng nút Sửa của chương.</span>`;
+  };
+  ta.addEventListener('input', debounce(update, 250)); cl.onchange = update; ta.addEventListener('paste', () => setTimeout(update, 0));
+  ti.addEventListener('input', () => { titleTouched = true; update(); });
+  save.onclick = async () => {
+    update(); if (!parsed.length) return toast('Chưa có nội dung để lưu.');
+    const list = parsed.length === 1 ? [{title: ti.value.trim() || parsed[0].title, content: parsed[0].content}] : parsed;
+    save.disabled = true;
+    await addChapters(storyId, list); await loadAll();
+    toast(list.length === 1 ? `Đã lưu “${list[0].title}”` : `Đã lưu ${list.length} chương`);
+    current.params = {id: storyId, _scroll: scrollY}; render();
+    setTimeout(() => $('#qa-text')?.focus({preventScroll: true}), 50);
+  };
+}
+
+/* ---------- Nhập nội dung (dùng chung) ---------- */
+function sourceBlock(prefix){
+  return `<fieldset style="border:0;padding:0;margin:0;display:grid;gap:10px">
+    <div class="seg" role="group" aria-label="Nguồn nội dung"><button type="button" data-src="paste" aria-pressed="true">Dán nội dung</button><button type="button" data-src="docx" aria-pressed="false">Tệp Word .docx</button></div>
+    <div data-pane="paste"><textarea id="${prefix}-text" class="field" rows="10" placeholder="Dán toàn bộ nội dung vào đây. Các dòng như “Chương 1: …” sẽ được tách thành chương riêng."></textarea></div>
+    <div data-pane="docx" hidden><label class="drop" id="${prefix}-drop" for="${prefix}-file">Chọn hoặc kéo thả tệp .docx vào đây<br><span class="muted small">Có thể chọn nhiều tệp, sắp theo tên tệp</span></label><input id="${prefix}-file" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple hidden><p class="hint" id="${prefix}-files"></p></div>
+    <label class="check"><input type="checkbox" id="${prefix}-split" checked> Tự tách chương theo dòng “Chương …” hoặc tiêu đề trong Word</label>
+    <input type="checkbox" id="${prefix}-clean" hidden>
+    <div class="preview" id="${prefix}-prev"><span class="muted">Xem trước các chương sẽ hiện ở đây.</span></div>
+  </fieldset>`;
+}
+function wireSource(root, prefix, fallbackTitle){
+  const st = {src: 'paste', files: [], chapters: [], busy: false};
+  const prev = $(`#${prefix}-prev`, root), text = $(`#${prefix}-text`, root), file = $(`#${prefix}-file`, root), split = $(`#${prefix}-split`, root), drop = $(`#${prefix}-drop`, root), clean = $(`#${prefix}-clean`, root);
+  const show = () => {
+    const c = st.chapters;
+    prev.innerHTML = st.busy ? 'Đang đọc tệp…' : !c.length ? '<span class="muted">Chưa có nội dung.</span>' :
+      `<b>${c.length} chương</b> · ${c.reduce((n, x) => n + x.content.length, 0).toLocaleString('vi-VN')} ký tự${removedHtml(st.removed)}<ol>${c.slice(0, 60).map(x => `<li>${esc(x.title)} <span class="muted small">(${x.content.length.toLocaleString('vi-VN')} ký tự)</span></li>`).join('')}${c.length > 60 ? `<li class="muted">… và ${c.length - 60} chương nữa</li>` : ''}</ol>`;
+  };
+  const recompute = async () => {
+    st.removed = [];
+    try {
+      if (st.src === 'paste'){ if (clean.checked) st.removed = cleanWeb(text.value).removed; st.chapters = textToChapters(text.value, split.checked, fallbackTitle(), clean.checked); }
+      else if (st.files.length){ st.busy = true; show(); const r = await filesToChapters(st.files, split.checked); st.chapters = r.chapters; if (r.meta) st.onMeta?.(r.meta); }
+      else st.chapters = [];
+    } catch (e){ st.chapters = []; toast(e.message, 5000); }
+    st.busy = false; show();
+  };
+  const setFiles = fs => { st.files = [...fs]; $(`#${prefix}-files`, root).textContent = st.files.map(f => f.name).join(', '); st.onFiles?.(st.files); recompute(); };
+  $$('[data-src]', root).forEach(b => b.onclick = () => { st.src = b.dataset.src; $$('[data-src]', root).forEach(x => x.setAttribute('aria-pressed', x === b)); $$('[data-pane]', root).forEach(p => p.hidden = p.dataset.pane !== st.src); if (st.src === 'docx') ensureMammoth().catch(() => {}); recompute(); });
+  text.addEventListener('input', debounce(recompute, 300));
+  split.onchange = recompute; clean.onchange = recompute;
+  file.onchange = () => setFiles(file.files);
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); setFiles(e.dataTransfer.files); });
+  st.recompute = recompute;
+  return st;
+}
+const removedHtml = rm => rm && rm.length ? ` · <details style="display:inline"><summary class="link" style="display:inline;cursor:pointer">đã bỏ ${rm.length} dòng thừa</summary><ul class="small muted" style="margin:.3em 0;padding-left:1.2em;max-height:8em;overflow:auto">${rm.slice(0, 80).map(l => `<li>${esc(l)}</li>`).join('')}</ul></details>` : '';
+const parseTags = s => [...new Set(String(s || '').split(/[,;#\n]/).map(t => t.trim()).filter(Boolean))];
+
+/* ---------- Thêm / sửa truyện ---------- */
+function StoryForm({id}){
+  const s = id ? S.stories.find(x => x.id === id) : null;
+  app().innerHTML = `<div class="wrap">
+  <header class="top"><button class="link" data-act="cancel">← Huỷ</button><h1 style="font-size:1.25rem">${s ? 'Sửa thông tin truyện' : 'Thêm truyện'}</h1></header>
+  <form class="form" id="f">
+    <label><span>Tên truyện</span><input id="f-title" class="field" required value="${esc(s?.title)}"></label>
+    <label><span>Tác giả</span><input id="f-author" class="field" value="${esc(s?.author)}"></label>
+    <label><span>Tag</span><input id="f-tags" class="field" value="${esc((s?.tags || []).join(', '))}" placeholder="Ví dụ: ngôn tình, hoàn thành, đọc lại"><p class="hint">Cách nhau bằng dấu phẩy.</p></label>
+    <label><span>Ghi chú</span><textarea id="f-note" class="field" rows="3">${esc(s?.note)}</textarea></label>
+    ${s ? '' : `<div style="display:grid;gap:5px"><span class="sc muted">Nội dung</span>${sourceBlock('n')}<p class="hint">Có thể để trống và thêm chương sau.</p></div>`}
+    <div class="form-actions"><button class="btn primary big" type="submit">${s ? 'Lưu thay đổi' : 'Lưu truyện'}</button>${s ? '<button class="btn danger" type="button" data-act="del">Xoá truyện</button>' : ''}</div>
+  </form></div>`;
+  const root = app(); const title = $('#f-title', root);
+  let src = null;
+  if (!s){
+    src = wireSource(root, 'n', () => title.value.trim() || 'Chương 1');
+    src.onFiles = fs => { if (!title.value.trim() && fs[0]) title.value = fs[0].name.replace(/\.docx$/i, '').replace(/ - [^-]+$/, ''); };
+    src.onMeta = m => { if (m.title) title.value = m.title; const set = (id, v) => { const el = $(id); if (v && !el.value.trim()) el.value = v; }; set('#f-author', m.author); set('#f-tags', (m.tags || []).join(', ')); set('#f-note', m.note); };
+  }
+  root.onclick = async e => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    if (b.dataset.act === 'cancel') history.length > 1 ? history.back() : go('library');
+    if (b.dataset.act === 'del'){
+      if (await ask(`Chuyển “${esc(s.title)}” vào Thùng rác? Có thể khôi phục lại trong Cài đặt → Thùng rác.`, 'Chuyển vào Thùng rác', true)){ await trashStory(s.id); await loadAll(); toast('Đã chuyển vào Thùng rác'); go('library'); }
+    }
+  };
+  $('#f', root).onsubmit = async e => {
+    e.preventDefault();
+    if (src?.busy) return toast('Đang đọc tệp, đợi một chút…');
+    const data = {title: title.value.trim(), author: $('#f-author').value.trim(), tags: parseTags($('#f-tags').value), note: $('#f-note').value.trim()};
+    if (!data.title) return title.focus();
+    const saved = await saveStory(s ? {...data, id: s.id} : data);
+    if (src && src.chapters.length) await addChapters(saved.id, src.chapters);
+    try { navigator.storage?.persist?.(); } catch {}
+    await loadAll(); toast(s ? 'Đã lưu' : `Đã thêm “${saved.title}”`);
+    if (s) history.length > 1 ? history.back() : go('story', {id: s.id}); else { go('story', {id: saved.id}, false); try { history.replaceState({view: 'story', params: {id: saved.id}}, ''); } catch {} }
+  };
+}
+
+/* ---------- Thêm chương ---------- */
+function ChapterAdd({storyId}){
+  const s = S.stories.find(x => x.id === storyId); if (!s) return go('library', {}, false);
+  const n = chaptersOf(storyId).length;
+  app().innerHTML = `<div class="wrap">
+  <header class="top"><button class="link" data-act="cancel">← ${esc(s.title)}</button></header>
+  <form class="form" id="f">
+    <h1 style="margin:0;font-size:1.5rem;font-weight:400">Thêm chương</h1>
+    <label><span>Tên chương</span><input id="c-title" class="field" placeholder="Chương ${n + 1}"><p class="hint">Dùng khi nội dung chỉ có một chương. Nếu nội dung có nhiều dòng “Chương …”, mỗi chương lấy tên theo dòng đó.</p></label>
+    ${sourceBlock('a')}
+    <div class="form-actions"><button class="btn primary big" type="submit">Thêm vào truyện</button></div>
+  </form></div>`;
+  const root = app(); const ct = $('#c-title', root);
+  const src = wireSource(root, 'a', () => ct.value.trim() || `Chương ${n + 1}`);
+  ct.addEventListener('input', debounce(() => src.recompute(), 300));
+  root.onclick = e => { if (e.target.closest('[data-act="cancel"]')) history.length > 1 ? history.back() : go('story', {id: storyId}); };
+  $('#f', root).onsubmit = async e => {
+    e.preventDefault(); if (src.busy) return toast('Đang đọc tệp, đợi một chút…');
+    if (!src.chapters.length) return toast('Chưa có nội dung để thêm.');
+    await addChapters(storyId, src.chapters); await loadAll(); toast(`Đã thêm ${src.chapters.length} chương`);
+    go('story', {id: storyId}, false); try { history.replaceState({view: 'story', params: {id: storyId}}, ''); } catch {}
+  };
+}
+
+/* ---------- Sửa chương ---------- */
+async function ChapterEdit({id, storyId}){
+  const meta = chaptersOf(storyId).find(c => c.id === id); if (!meta) return go('story', {id: storyId}, false);
+  const text = (await DB.get('texts', id))?.content || '';
+  const list = chaptersOf(storyId); const i = list.indexOf(meta);
+  app().innerHTML = `<div class="wrap">
+  <header class="top"><button class="link" data-act="cancel">← Mục lục</button><div class="top-actions"><button class="btn" data-act="up" ${i === 0 ? 'disabled' : ''}>Lên</button><button class="btn" data-act="down" ${i === list.length - 1 ? 'disabled' : ''}>Xuống</button></div></header>
+  <form class="form" id="f">
+    <p class="muted small" style="margin:0">Chương ${i + 1} / ${list.length}</p>
+    <label><span>Tên chương</span><input id="e-title" class="field" required value="${esc(meta.title)}"></label>
+    <label><span>Nội dung</span><textarea id="e-text" class="field" rows="18">${esc(text)}</textarea><p class="hint">Mỗi dòng là một đoạn văn.</p></label>
+    <div class="form-actions"><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary big" type="submit">Lưu chương</button><button class="btn" type="button" data-act="read">Đọc chương này</button></div><button class="btn danger" type="button" data-act="del">Xoá chương</button></div>
+  </form></div>`;
+  const root = app();
+  root.onclick = async e => {
+    const b = e.target.closest('[data-act]'); if (!b || b.disabled) return; const a = b.dataset.act;
+    if (a === 'cancel') return history.length > 1 ? history.back() : go('story', {id: storyId});
+    if (a === 'read') return go('reader', {storyId, chapterId: id, ratio: 0});
+    if (a === 'up' || a === 'down'){ await moveChapter(meta, a === 'up' ? -1 : 1); await loadAll(); current.params = {id, storyId}; render(); toast('Đã đổi thứ tự'); }
+    if (a === 'del' && await ask(`Xoá chương “${esc(meta.title)}”?`, 'Xoá chương', true)){ await deleteChapter(meta); await loadAll(); toast('Đã xoá chương'); go('story', {id: storyId}, false); try { history.replaceState({view: 'story', params: {id: storyId}}, ''); } catch {} }
+  };
+  $('#f', root).onsubmit = async e => {
+    e.preventDefault(); const t = $('#e-title').value.trim(); if (!t) return;
+    await updateChapter(meta, t, cleanText($('#e-text').value)); await loadAll(); toast('Đã lưu chương');
+  };
+}
+
+/* ---------- Trình đọc ---------- */
+const Prefs = {
+  d: {mode: 'system', size: 20, lh: 1.75, width: 'normal', justify: false, autoLock: 1, flow: 'scroll'},
+  get(){ return {...this.d, ...LS.get('prefs', {})}; },
+  set(p){ LS.set('prefs', {...this.get(), ...p}); this.apply(); },
+  apply(){
+    const p = this.get(), r = document.documentElement;
+    if (p.mode === 'system') r.removeAttribute('data-mode'); else r.setAttribute('data-mode', p.mode);
+    r.style.setProperty('--rs', p.size + 'px'); r.style.setProperty('--rl', p.lh);
+    r.style.setProperty('--rw', {narrow: '30em', normal: '36em', wide: '46em'}[p.width] || '36em');
+    const m = $('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(r).getPropertyValue('--bg').trim() || '#f8f8f6';
+  }
+};
+const Reader = {
+  el: null, storyId: null, list: [], idx: 0, saveT: null, lastY: 0,
+  async open(storyId, chapterId, ratio){
+    const s = S.stories.find(x => x.id === storyId); this.list = chaptersOf(storyId);
+    if (!s || !this.list.length) return go('story', {id: storyId}, false);
+    this.storyId = storyId; this.story = s;
+    let idx = this.list.findIndex(c => c.id === chapterId); if (idx < 0) idx = 0;
+    if (!this.el){
+      this.el = document.createElement('section'); this.el.id = 'reader'; this.el.setAttribute('aria-label', 'Trình đọc');
+      this.el.innerHTML = `<div class="r-top"><button class="ib" data-r="back" aria-label="Quay lại">←</button><div class="ttl"><b id="rt-s"></b><span id="rt-c"></span></div><button class="ib" data-r="toc">Mục lục</button><button class="ib" data-r="edit" title="Sửa chương này">Sửa</button><button class="ib" data-r="aa" aria-label="Cỡ chữ và kiểu đọc">Aa</button></div>
+      <article class="r-body"><div class="r-cols"><p class="r-kicker" id="r-k"></p><h2 id="r-h"></h2><div class="r-text" id="r-x"></div><nav class="r-end"><button class="btn" data-r="prev">← Chương trước</button><button class="btn primary" data-r="next">Chương sau →</button></nav></div></article>
+      <button class="btn primary sel-btn" data-r="term" hidden>Thay từ này</button>
+      <div class="r-bot"><button class="ib" data-r="prev" aria-label="Chương trước">‹ Trước</button><div class="r-pg" id="r-pg"></div><button class="ib" data-r="next" aria-label="Chương sau">Sau ›</button></div>`;
+      document.body.appendChild(this.el);
+      this.body = $('.r-body', this.el);
+      this.el.addEventListener('click', e => this.onClick(e));
+      this.el.addEventListener('scroll', () => this.onScroll(), {passive: true});
+      this.body.addEventListener('touchstart', e => { const t = e.touches[0]; this.tx = t.clientX; this.ty = t.clientY; }, {passive: true});
+      this.body.addEventListener('touchend', e => {
+        if (!this.paged || this.tx == null) return; const t = e.changedTouches[0]; const dx = t.clientX - this.tx, dy = t.clientY - this.ty; this.tx = null;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){ this.swiped = Date.now(); this.turn(dx < 0 ? 1 : -1); }
+      }, {passive: true});
+      document.addEventListener('keydown', this.onKey = e => {
+        if (!this.el || $('.scrim') || /INPUT|TEXTAREA/.test(document.activeElement?.tagName)) return;
+        if (e.key === 'ArrowRight' || (this.paged && (e.key === 'PageDown' || e.key === ' '))){ e.preventDefault(); this.paged ? this.turn(1) : this.step(1); }
+        if (e.key === 'ArrowLeft' || (this.paged && e.key === 'PageUp')){ e.preventDefault(); this.paged ? this.turn(-1) : this.step(-1); }
+        if (e.key === 'Escape') this.back();
+      });
+      window.addEventListener('resize', this.onResize = debounce(() => { if (this.el && this.paged){ const r = this.ratio(); this.layout(r); } }, 150));
+      document.addEventListener('selectionchange', this.onSel = debounce(() => {
+        if (!this.el) return; const s = String(getSelection?.() || '').trim(); const n = getSelection()?.anchorNode;
+        const ok = s && s.length <= 40 && !/\n/.test(s) && n && $('#r-x')?.contains(n.nodeType === 3 ? n.parentNode : n);
+        this.selText = ok ? s : ''; $('.sel-btn', this.el).hidden = !ok;
+      }, 120));
+    }
+    document.body.style.overflow = 'hidden';
+    await this.show(idx, ratio || 0);
+  },
+  /* Lật trang: nội dung chương xếp thành các cột rộng đúng một màn hình, mỗi lần lật dịch đúng một cột */
+  layout(ratio){
+    this.paged = Prefs.get().flow === 'page';
+    this.el.classList.toggle('paged', this.paged);
+    const b = this.body, cols = $('.r-cols', b);
+    if (!this.paged){ b.style.cssText = ''; cols.style.cssText = ''; this.el.scrollTop = ratio > 0 ? ratio * (this.el.scrollHeight - this.el.clientHeight) : 0; this.lastY = this.el.scrollTop; this.updatePg(); return; }
+    this.el.classList.remove('calm'); this.el.scrollTop = 0;
+    b.style.top = $('.r-top', this.el).offsetHeight + 'px'; b.style.bottom = $('.r-bot', this.el).offsetHeight + 'px';
+    const cs = getComputedStyle(b); const cw = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); const gap = 36;
+    cols.style.cssText = `height:${b.clientHeight - parseFloat(cs.paddingTop)}px;column-width:${cw}px;column-gap:${gap}px;column-fill:auto;transform:none`;
+    this.pageW = cw + gap;
+    const left = cols.getBoundingClientRect().left, right = $('.r-end', cols).getBoundingClientRect().right;
+    this.pages = Math.max(1, Math.round((right - left + gap) / this.pageW));
+    this.page = Math.min(this.pages - 1, Math.max(0, Math.round((ratio || 0) * (this.pages - 1))));
+    this.slide(); this.updatePg();
+  },
+  slide(){ $('.r-cols', this.body).style.transform = `translateX(${-this.page * this.pageW}px)`; },
+  turn(d){
+    const p = this.page + d;
+    if (p < 0){ if (this.idx > 0){ this.save(); this.show(this.idx - 1, 1); } return; }
+    if (p >= this.pages){ if (this.idx < this.list.length - 1){ this.save(); this.show(this.idx + 1, 0); } else toast('Đã hết truyện'); return; }
+    this.page = p; this.slide(); this.updatePg();
+    clearTimeout(this.saveT); this.saveT = setTimeout(() => this.save(), 400);
+  },
+  async show(idx, ratio){
+    this.idx = idx; const c = this.list[idx];
+    const t = (await DB.get('texts', c.id))?.content || '';
+    const sid = this.storyId; const ctitle = applyTerms(c.title, sid);
+    $('#rt-s').textContent = this.story.title; $('#rt-c').textContent = ctitle;
+    $('#r-k').textContent = `Chương ${idx + 1} / ${this.list.length}`;
+    $('#r-h').textContent = ctitle;
+    const x = $('#r-x'); x.className = 'r-text' + (Prefs.get().justify ? ' just' : '');
+    x.innerHTML = t ? applyTerms(t, sid).split('\n').filter(Boolean).map(p => `<p>${esc(p)}</p>`).join('') : '<p class="muted">Chương này chưa có nội dung.</p>';
+    $$('[data-r="prev"]', this.el).forEach(b => b.disabled = idx === 0);
+    $$('[data-r="next"]', this.el).forEach(b => { b.disabled = idx === this.list.length - 1; });
+    const endNext = $('.r-end [data-r="next"]', this.el); endNext.textContent = idx === this.list.length - 1 ? 'Hết truyện' : 'Chương sau →';
+    this.el.classList.remove('calm');
+    $('.r-cols', this.body).style.transform = 'none';
+    requestAnimationFrame(() => this.layout(ratio));
+    if (!ratio) saveProgress(this.storyId, c.id, 0);
+  },
+  ratio(){
+    if (this.paged) return this.pages > 1 ? this.page / (this.pages - 1) : 1;
+    const max = this.el.scrollHeight - this.el.clientHeight; return max > 0 ? this.el.scrollTop / max : 1;
+  },
+  updatePg(){
+    const r = this.ratio(); const pct = Math.min(100, Math.round(((this.idx + r) / this.list.length) * 100));
+    const pg = this.paged ? ` · trang ${this.page + 1}/${this.pages}` : '';
+    $('#r-pg').innerHTML = `Chương ${this.idx + 1}/${this.list.length}${pg} · ${pct}%<span class="bar"><i style="width:${pct}%"></i></span>`;
+  },
+  onScroll(){
+    if (this.paged) return;
+    const y = this.el.scrollTop; if (Math.abs(y - this.lastY) > 24){ this.el.classList.toggle('calm', y > this.lastY && y > 80); this.lastY = y; }
+    this.updatePg(); clearTimeout(this.saveT); this.saveT = setTimeout(() => this.save(), 500);
+  },
+  save(){ if (!this.el || !this.list[this.idx]) return; clearTimeout(this.saveT); saveProgress(this.storyId, this.list[this.idx].id, this.ratio()); },
+  step(d){ const j = this.idx + d; if (j < 0 || j >= this.list.length) return; this.save(); this.show(j, 0); },
+  back(){ this.save(); if (history.length > 1) history.back(); else go('story', {id: this.storyId}); },
+  onClick(e){
+    const b = e.target.closest('[data-r]');
+    if (!b){
+      if (String(getSelection?.() || '') || !e.target.closest('.r-body')) return;
+      if (this.paged){ if (Date.now() - (this.swiped || 0) < 400) return; const x = e.clientX / innerWidth; if (x < .33) this.turn(-1); else if (x > .67) this.turn(1); return; }
+      this.el.classList.toggle('calm'); return;
+    }
+    const r = b.dataset.r;
+    if (r === 'back') this.back();
+    if (r === 'edit'){ this.save(); go('editChapter', {id: this.list[this.idx].id, storyId: this.storyId}); }
+    if (r === 'term') this.addTerm(this.selText);
+    if (r === 'prev') this.step(-1);
+    if (r === 'next') this.step(1);
+    if (r === 'toc') this.toc();
+    if (r === 'aa') this.aa();
+  },
+  sheet(html, wire){
+    const m = document.createElement('div'); m.className = 'scrim'; m.innerHTML = `<div class="sheet" role="dialog" aria-modal="true">${html}</div>`;
+    document.body.appendChild(m); m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-close]')) m.remove(); }); wire?.(m); return m;
+  },
+  toc(){
+    const m = this.sheet(`<div class="line" style="display:flex;justify-content:space-between;align-items:center"><h3>${esc(this.story.title)}</h3><button class="ib" data-close>Đóng</button></div><ol class="toc">${this.list.map((c, i) => `<li class="${i < this.idx ? 'read' : ''} ${i === this.idx ? 'cur' : ''}"><button class="go" data-i="${i}"><span class="n">${i + 1}</span><span class="t">${esc(c.title)}</span></button></li>`).join('')}</ol>`, m => {
+      m.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b){ m.remove(); this.save(); this.show(+b.dataset.i, 0); } });
+    });
+    m.querySelector('li.cur')?.scrollIntoView({block: 'center'});
+  },
+  aa(){
+    const draw = m => {
+      const p = Prefs.get();
+      m.querySelector('.sheet').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h3>Hiển thị</h3><button class="ib" data-close>Xong</button></div>${displayControls(p)}`;
+    };
+    this.sheet('', m => { draw(m); m.addEventListener('click', e => { if (handleDisplay(e)){ draw(m); const r = this.ratio(); $('#r-x').className = 'r-text' + (Prefs.get().justify ? ' just' : ''); requestAnimationFrame(() => this.layout(r)); } }); });
+  },
+  async addTerm(sel){
+    $('.sel-btn', this.el).hidden = true; if (!sel) return;
+    const res = await termModal(sel, '', 'story'); if (!res) return;
+    const id = res.scope === 'all' ? GLOBAL_ID : this.storyId;
+    const list = termsOf(id).filter(t => t.from !== res.from); list.push({from: res.from, to: res.to});
+    await setTerms(id, list); getSelection()?.removeAllRanges();
+    const r = this.ratio(); this.story = S.stories.find(s => s.id === this.storyId); await this.show(this.idx, r || 0.0001);
+    toast(`Đã thay “${res.from}” → “${res.to}”${res.scope === 'all' ? ' cho mọi truyện' : ''}`);
+  },
+  close(){
+    if (!this.el) return; this.save(); document.removeEventListener('keydown', this.onKey); window.removeEventListener('resize', this.onResize); document.removeEventListener('selectionchange', this.onSel); this.el.remove(); this.el = null; document.body.style.overflow = ''; $$('.scrim').forEach(x => x.remove());
+  }
+};
+function displayControls(p){
+  const seg = (key, opts) => `<div class="seg">${opts.map(([v, l]) => `<button data-pref="${key}" data-val="${v}" aria-pressed="${String(p[key]) === String(v)}">${l}</button>`).join('')}</div>`;
+  return `<div class="line"><span>Kiểu đọc</span></div>${seg('flow', [['scroll','Cuộn dọc'],['page','Lật trang ngang']])}
+  <p class="hint" style="margin:-4px 0 0">${p.flow === 'page' ? 'Vuốt sang trái/phải, hoặc chạm mép phải/trái màn hình để sang trang. Hết chương tự sang chương sau.' : 'Kéo lên xuống để đọc. Chạm giữa màn hình để ẩn/hiện thanh công cụ.'}</p>
+  <div class="line"><span>Nền</span></div>${seg('mode', [['system','Theo máy'],['light','Sáng'],['paper','Giấy'],['dark','Tối']])}
+  <div class="line"><span>Cỡ chữ</span><div class="stepper"><button class="btn" data-size="-1" aria-label="Nhỏ hơn">A−</button><span class="num">${p.size}px</span><button class="btn" data-size="1" aria-label="Lớn hơn">A+</button></div></div>
+  <div class="line"><span>Giãn dòng</span></div>${seg('lh', [['1.5','Hẹp'],['1.75','Vừa'],['2','Rộng']])}
+  <div class="line"><span>Độ rộng cột chữ</span></div>${seg('width', [['narrow','Hẹp'],['normal','Vừa'],['wide','Rộng']])}
+  <div class="line"><span>Căn đều hai bên</span>${seg('justify', [['false','Tắt'],['true','Bật']])}</div>`;
+}
+function handleDisplay(e){
+  const b = e.target.closest('[data-pref],[data-size]'); if (!b) return false;
+  if (b.dataset.size){ const p = Prefs.get(); Prefs.set({size: Math.max(14, Math.min(34, p.size + (+b.dataset.size)))}); return true; }
+  let v = b.dataset.val; if (v === 'true' || v === 'false') v = v === 'true'; else if (b.dataset.pref === 'lh') v = +v;
+  Prefs.set({[b.dataset.pref]: v}); return true;
+}
+
+/* ---------- Đăng nhập Google ---------- */
+function deviceInfo(){
+  const ua = navigator.userAgent;
+  const os = /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'iPad' : /Android/.test(ua) ? 'Android' : /Mac OS X/.test(ua) ? 'Mac' : /Windows/.test(ua) ? 'Windows' : /CrOS/.test(ua) ? 'Chromebook' : /Linux/.test(ua) ? 'Linux' : 'Thiết bị';
+  const br = /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /FxiOS|Firefox\//.test(ua) ? 'Firefox' : /Safari\//.test(ua) ? 'Safari' : 'Trình duyệt';
+  return {os, br};
+}
+const myDeviceId = () => { let id = LS.get('deviceId', null); if (!id){ id = uid(); LS.set('deviceId', id); } return id; };
+const myDeviceName = () => LS.get('deviceName', null) || (({os, br}) => `${os} · ${br}`)(deviceInfo());
+
+const Auth = {
+  get info(){ return LS.get('auth', null); },
+  clientId(){ return String(LS.get('clientId', '') || CFG.googleClientId || '').trim(); },
+  token(){ const t = LS.get('token', null); return t && t.exp > Date.now() + 60000 ? t.t : null; },
+  _p: null,
+  gis(){
+    if (window.google?.accounts?.oauth2) return Promise.resolve();
+    if (!this._p) this._p = new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://accounts.google.com/gsi/client'; s.async = true; s.onload = () => res(); s.onerror = () => { this._p = null; rej(new Error('Không tải được dịch vụ đăng nhập Google. Kiểm tra kết nối mạng.')); }; document.head.appendChild(s); });
+    return this._p;
+  },
+  request(prompt){
+    return new Promise((res, rej) => {
+      const id = this.clientId();
+      if (!id) return rej(new Error('Chưa có Google Client ID. Vào Cài đặt → Đồng bộ Google để nhập.'));
+      if (!window.google?.accounts?.oauth2){ this.gis().catch(() => {}); return rej(new Error('Dịch vụ đăng nhập Google đang tải. Bấm lại sau vài giây.')); }
+      const tc = google.accounts.oauth2.initTokenClient({
+        client_id: id, scope: SCOPE,
+        callback: r => { if (r.error) return rej(new Error('Google từ chối đăng nhập: ' + r.error)); LS.set('token', {t: r.access_token, exp: Date.now() + (r.expires_in || 3600) * 1000}); res(r.access_token); },
+        error_callback: e => rej(new Error(e?.type === 'popup_closed' ? 'Bạn đã đóng cửa sổ đăng nhập.' : e?.type === 'popup_failed_to_open' ? 'Trình duyệt chặn cửa sổ đăng nhập. Hãy cho phép cửa sổ bật lên rồi thử lại.' : 'Đăng nhập Google không thành công.'))
+      });
+      const hint = this.info?.email; tc.requestAccessToken(hint ? {prompt, login_hint: hint} : {prompt});
+    });
+  },
+  async signIn(){
+    const tokP = this.request('select_account'); // gọi ngay trong lần bấm để không bị chặn cửa sổ
+    const tok = await tokP;
+    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {headers: {Authorization: 'Bearer ' + tok}});
+    if (!r.ok) throw new Error('Không đọc được thông tin tài khoản Google.');
+    const u = await r.json(); const email = String(u.email || '').toLowerCase();
+    const allowed = [].concat(CFG.ownerEmail || CFG.allowedEmails || []).map(x => String(x).toLowerCase()).filter(Boolean);
+    if (allowed.length && !allowed.includes(email)){ LS.del('token'); throw new Error(`Tài khoản ${email} không được phép dùng thư viện này.`); }
+    const lock = await DB.kvGet('lock');
+    const pass = await askPass(`Nhập ${lock.kind === 'pin' ? 'mã PIN' : 'mật khẩu'} của Tủ truyện để mã hoá dữ liệu đồng bộ. Mọi thiết bị cần dùng cùng một ${lock.kind === 'pin' ? 'mã PIN' : 'mật khẩu'}.`, 'Bật đồng bộ', lock.kind);
+    if (pass == null){ LS.del('token'); throw new Error('Đã huỷ đăng nhập.'); }
+    const raw = await unwrap(pass); if (!raw){ LS.del('token'); throw new Error('Sai mã khoá.'); } raw.fill(0);
+    LS.set('auth', {email, name: u.name || '', loginAt: Date.now()});
+    await deriveSyncKey(pass);
+    LS.set('dirtyLib', true); LS.set('dirtyState', true); LS.del('libSeen');
+  },
+  async signOut(){
+    if (Auth.token() && Vault.syncKey){
+      const devs = LS.get('devices', []); const me = devs.find(d => d.id === myDeviceId()); if (me){ me.signedOutAt = Date.now(); LS.set('devices', devs); }
+      try { await Sync.run({quiet: true, onlyState: true}); } catch {}
+    }
+    this.clearLocal();
+  },
+  clearLocal(){ ['auth', 'token', 'devices', 'lastSync', 'libSeen', 'dirtyLib', 'dirtyState', 'forceNext'].forEach(k => LS.del(k)); Vault.syncKey = null; }
+};
+
+/* ---------- Đồng bộ Google Drive (appDataFolder, dữ liệu đã mã hoá) ---------- */
+function mergeDevices(a, b){
+  const m = new Map();
+  for (const d of [...a, ...b]){
+    const o = m.get(d.id); if (!o){ m.set(d.id, {...d}); continue; }
+    const n = {...o}; for (const k of ['loginAt', 'lastSeen', 'revokedAt', 'removedAt', 'signedOutAt']) n[k] = Math.max(o[k] || 0, d[k] || 0);
+    if ((d.nameAt || 0) > (o.nameAt || 0)){ n.name = d.name; n.nameAt = d.nameAt; }
+    n.os = d.os || o.os; n.br = d.br || o.br; m.set(d.id, n);
+  }
+  return [...m.values()];
+}
+function devStatus(d){ const L = d.loginAt || 0; if ((d.removedAt || 0) > L) return 'removed'; if ((d.signedOutAt || 0) > L) return 'out'; if ((d.revokedAt || 0) > L) return 'pending'; return 'active'; }
+const Sync = {
+  busy: false, state: 'idle', timer: null,
+  chipHtml(){
+    return this.syncChip();
+  },
+  syncChip(){
+    if (!HOSTED || !Auth.info) return '';
+    const dirty = LS.get('dirtyLib', false) || LS.get('dirtyState', false);
+    const txt = this.busy ? 'Đang đồng bộ…' : this.state === 'error' ? 'Lỗi đồng bộ · thử lại' : !Auth.token() ? 'Chạm để đồng bộ' : dirty ? 'Chờ đồng bộ' : `Đã đồng bộ ${LS.get('lastSync', 0) ? new Date(LS.get('lastSync')).toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'}) : ''}`;
+    return `<button class="btn" data-act="sync" id="sync-chip" title="Đồng bộ ngay">${txt}</button>`;
+  },
+  paint(){ const c = $('#sync-chip'); if (c) c.outerHTML = this.chipHtml(); const st = $('#sync-status'); if (st) st.textContent = this.statusText(); },
+  statusText(){ return this.busy ? 'Đang đồng bộ…' : this.state === 'error' ? 'Lần đồng bộ gần nhất bị lỗi.' : `Lần đồng bộ cuối: ${fmtAgo(LS.get('lastSync', 0))}`; },
+  schedule(kind){
+    LS.set(kind === 'lib' ? 'dirtyLib' : 'dirtyState', true); this.paint();
+    if (!HOSTED || !Auth.info || !Auth.token() || !Vault.syncKey) return;
+    clearTimeout(this.timer); this.timer = setTimeout(() => this.run({quiet: true}).catch(() => {}), kind === 'lib' ? 8000 : 45000);
+  },
+  async manual(){
+    try {
+      if (!Auth.token()) await Auth.request('');
+      if (!Vault.syncKey){ const lock = await DB.kvGet('lock'); const p = await askPass(`Nhập ${lock.kind === 'pin' ? 'mã PIN' : 'mật khẩu'} để mở khoá dữ liệu đồng bộ.`, 'Tiếp tục', lock.kind); if (p == null) return; const raw = await unwrap(p); if (!raw) return toast('Sai mã khoá.'); raw.fill(0); await deriveSyncKey(p); }
+      await this.run({});
+    } catch (e){ toast(e.message, 5000); }
+  },
+  async api(url, opts = {}){
+    const tok = Auth.token(); if (!tok){ const e = new Error('Phiên đăng nhập Google đã hết hạn. Chạm “Đồng bộ” để đăng nhập lại.'); e.auth = true; throw e; }
+    const r = await fetch(url, {...opts, headers: {...(opts.headers || {}), Authorization: 'Bearer ' + tok}});
+    if (r.status === 401){ LS.del('token'); const e = new Error('Phiên đăng nhập Google đã hết hạn. Chạm “Đồng bộ” để đăng nhập lại.'); e.auth = true; throw e; }
+    if (!r.ok){ let m = ''; try { m = (await r.json()).error?.message || ''; } catch {} throw new Error(`Google Drive báo lỗi ${r.status}${m ? ': ' + m : ''}`); }
+    return r;
+  },
+  async download(f){ const box = await (await this.api(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`)).json(); if (!box || box.app !== 'tu-truyen') throw new Error('Tệp đồng bộ không hợp lệ.'); try { return await openJSON(Vault.syncKey, box); } catch { const e = new Error('Không giải mã được dữ liệu trên Google Drive. Thiết bị này đang dùng mã khoá khác với thư viện đã đồng bộ — hãy đổi mã khoá cho giống nhau.'); e.key = true; throw e; } },
+  async upload(name, f, obj){
+    const body = JSON.stringify({app: 'tu-truyen', v: 1, ...(await sealJSON(Vault.syncKey, obj))});
+    if (f) return (await this.api(`https://www.googleapis.com/upload/drive/v3/files/${f.id}?uploadType=media&fields=id,modifiedTime`, {method: 'PATCH', headers: {'Content-Type': 'application/json'}, body})).json();
+    const bd = 'tt' + uid(); const meta = {name, parents: ['appDataFolder'], mimeType: 'application/json'};
+    const data = `--${bd}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n--${bd}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${bd}--`;
+    return (await this.api('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,modifiedTime', {method: 'POST', headers: {'Content-Type': 'multipart/related; boundary=' + bd}, body: data})).json();
+  },
+  async run({quiet = false, onlyState = false} = {}){
+    if (!HOSTED || !Auth.info || this.busy || !Vault.key) return;
+    if (!Vault.syncKey) throw new Error('Cần nhập mã khoá để đồng bộ.');
+    this.busy = true; this.paint();
+    try {
+      const q = encodeURIComponent(`name='${LIB_FILE}' or name='${STATE_FILE}'`);
+      const files = (await (await this.api(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id,name,modifiedTime)&pageSize=20`)).json()).files || [];
+      const fLib = files.find(f => f.name === LIB_FILE), fState = files.find(f => f.name === STATE_FILE);
+      const force = LS.get('forceNext', false); let changed = false;
+      const local = await snapshot();
+      // 1) thư viện (truyện + chương)
+      if (!onlyState){
+        const need = force || LS.get('dirtyLib', false) || !fLib || fLib.modifiedTime !== LS.get('libSeen', '');
+        if (need){
+          const remote = fLib && !force ? await this.download(fLib) : {stories: [], chapters: []};
+          const ms = mergeRecords(local.stories, remote.stories || [], 'id'), mc = mergeRecords(local.chapters, remote.chapters || [], 'id');
+          if (ms.toLocal.length || mc.toLocal.length){ await applyRecords({stories: ms.toLocal, chapters: mc.toLocal}); changed = true; }
+          let seen = fLib?.modifiedTime;
+          if (force || !fLib || ms.remoteBehind || mc.remoteBehind){ const r = await this.upload(LIB_FILE, fLib, {stories: ms.merged, chapters: mc.merged}); seen = r.modifiedTime; }
+          LS.set('libSeen', seen || ''); LS.set('dirtyLib', false);
+        }
+      }
+      // 2) danh sách thiết bị (tiến độ đọc KHÔNG đồng bộ — mỗi máy tự giữ của mình)
+      const remoteS = fState && !force ? await this.download(fState) : {devices: []};
+      let devices = mergeDevices(remoteS.devices || [], LS.get('devices', []));
+      const me = myDeviceId(), info = Auth.info, now = Date.now(), {os, br} = deviceInfo();
+      const self = devices.find(d => d.id === me) || {};
+      const revoked = (self.revokedAt || 0) > (info.loginAt || 0) || (self.removedAt || 0) > (info.loginAt || 0);
+      const selfNew = {...self, id: me, name: myDeviceName(), nameAt: Math.max(self.nameAt || 0, LS.get('nameAt', 0)), os, br, loginAt: Math.max(self.loginAt || 0, info.loginAt || 0), lastSeen: self.lastSeen && now - self.lastSeen < 3600e3 * 3 ? self.lastSeen : now};
+      if (revoked) selfNew.signedOutAt = now;
+      devices = devices.filter(d => d.id !== me).concat(selfNew);
+      const norm = arr => JSON.stringify([...arr].sort((a, b) => a.id < b.id ? -1 : 1));
+      if (force || !fState || remoteS.progress || norm(devices) !== norm(remoteS.devices || [])) await this.upload(STATE_FILE, fState, {devices});
+      LS.set('devices', devices); LS.set('lastSync', Date.now()); LS.set('dirtyState', false); LS.del('forceNext');
+      this.state = 'ok';
+      if (changed){ await loadAll(); if (current.view !== 'reader' && !$('form')) render(); }
+      if (revoked){ Auth.clearLocal(); toast('Thiết bị này đã được đăng xuất khỏi đồng bộ từ một thiết bị khác.', 5000); if (current.view === 'settings') render(); }
+      else if (!quiet) toast('Đã đồng bộ');
+    } catch (e){
+      this.state = e.auth ? 'idle' : 'error'; if (!quiet || e.key) toast(e.message, 6000); if (!quiet) throw e;
+    } finally { this.busy = false; this.paint(); }
+  }
+};
+
+/* ---------- Xuất Word (.docx tự tạo, không cần thư viện) ---------- */
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++){ let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = u => { let c = 0xFFFFFFFF; for (let i = 0; i < u.length; i++) c = CRC[(c ^ u[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function makeZip(entries){ // [{name, data:Uint8Array|string}] — lưu không nén, đủ cho Word đọc
+  const parts = [], central = []; let off = 0;
+  const d = new Date(); const dosT = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1); const dosD = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  for (const e of entries){
+    const name = te.encode(e.name), data = typeof e.data === 'string' ? te.encode(e.data) : e.data, crc = crc32(data);
+    const h = new DataView(new ArrayBuffer(30)); h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true); h.setUint16(10, dosT, true); h.setUint16(12, dosD, true); h.setUint32(14, crc, true); h.setUint32(18, data.length, true); h.setUint32(22, data.length, true); h.setUint16(26, name.length, true); h.setUint16(28, 0, true);
+    parts.push(new Uint8Array(h.buffer), name, data);
+    const c = new DataView(new ArrayBuffer(46)); c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(10, 0, true); c.setUint16(12, dosT, true); c.setUint16(14, dosD, true); c.setUint32(16, crc, true); c.setUint32(20, data.length, true); c.setUint32(24, data.length, true); c.setUint16(28, name.length, true); c.setUint32(42, off, true);
+    central.push(new Uint8Array(c.buffer), name); off += 30 + name.length + data.length;
+  }
+  const cdSize = central.reduce((n, p) => n + p.length, 0);
+  const end = new DataView(new ArrayBuffer(22)); end.setUint32(0, 0x06054b50, true); end.setUint16(8, entries.length, true); end.setUint16(10, entries.length, true); end.setUint32(12, cdSize, true); end.setUint32(16, off, true);
+  return new Blob([...parts, ...central, new Uint8Array(end.buffer)]);
+}
+const xml = s => String(s ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function storyDocx(s){
+  const list = chaptersOf(s.id); const texts = await Promise.all(list.map(c => DB.get('texts', c.id)));
+  const P = (t, style, extra = '') => `<w:p>${style || extra ? `<w:pPr>${style ? `<w:pStyle w:val="${style}"/>` : ''}${extra}</w:pPr>` : ''}<w:r><w:t xml:space="preserve">${xml(t)}</w:t></w:r></w:p>`;
+  let body = P(s.title, 'Title');
+  if (s.author) body += P('Tác giả: ' + s.author, 'Meta');
+  if ((s.tags || []).length) body += P('Tag: ' + s.tags.join(', '), 'Meta');
+  if (s.note) body += P('Ghi chú: ' + s.note.replace(/\n+/g, ' '), 'Meta');
+  list.forEach((c, i) => { body += P(applyTerms(c.title, s.id), 'Heading1', i ? '<w:pageBreakBefore/>' : ''); applyTerms(texts[i]?.content || '', s.id).split('\n').filter(Boolean).forEach(p => body += P(p)); });
+  const W = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+  const font = '<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman" w:eastAsia="Times New Roman"/>';
+  const files = [
+    {name: '[Content_Types].xml', data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`},
+    {name: '_rels/.rels', data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`},
+    {name: 'docProps/core.xml', data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>${xml(s.title)}</dc:title><dc:creator>${xml(s.author)}</dc:creator><cp:keywords>${xml((s.tags || []).join(', '))}</cp:keywords></cp:coreProperties>`},
+    {name: 'word/_rels/document.xml.rels', data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+    {name: 'word/styles.xml', data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${W}><w:docDefaults><w:rPrDefault><w:rPr>${font}<w:sz w:val="28"/><w:lang w:val="vi-VN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="160" w:line="360" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>
+<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>
+<w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/><w:spacing w:after="240"/></w:pPr><w:rPr><w:b/><w:sz w:val="48"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Meta"><w:name w:val="Thong tin truyen"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/><w:spacing w:after="60"/></w:pPr><w:rPr><w:i/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:jc w:val="center"/><w:spacing w:before="240" w:after="240"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:sz w:val="34"/></w:rPr></w:style></w:styles>`},
+    {name: 'word/document.xml', data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${W}><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1418" w:right="1134" w:bottom="1418" w:left="1418" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr></w:body></w:document>`}
+  ];
+  return makeZip(files);
+}
+const safeName = s => (String(s || 'truyen').replace(/[\\/:*?"<>|\u0000-\u001F]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 90) || 'truyen');
+const stamp = () => { const d = new Date(); return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`; };
+async function saveFile(blob, name, type){
+  const file = new File([blob], name, {type});
+  try { if (/iPhone|iPad|Android/.test(navigator.userAgent) && navigator.canShare?.({files: [file]})){ await navigator.share({files: [file], title: name}); return true; } } catch (e){ if (e.name === 'AbortError') return false; }
+  const url = URL.createObjectURL(file); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1500); return true;
+}
+const DOCX_TYPE = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+/* Ghi nhớ lần xuất Word của từng truyện để lần sau chỉ xuất truyện mới hoặc đã sửa */
+async function storyVersions(){ // thời điểm sửa gần nhất của từng truyện (thông tin + chương, kể cả chương đã xoá)
+  const v = new Map(S.stories.map(s => [s.id, s.updatedAt || 0]));
+  for (const c of await DB.all('chapters')) if (v.has(c.storyId)) v.set(c.storyId, Math.max(v.get(c.storyId), c.updatedAt || 0));
+  return v;
+}
+async function pendingWord(){
+  const done = (await DB.kvGet('wordExported')) || {}; const v = await storyVersions();
+  return live().filter(s => chaptersOf(s.id).length).map(s => ({s, ver: v.get(s.id), state: !done[s.id] ? 'new' : v.get(s.id) > done[s.id] ? 'edited' : 'same'}));
+}
+async function markExported(items){ const done = (await DB.kvGet('wordExported')) || {}; items.forEach(x => done[x.s.id] = x.ver); await DB.kvSet('wordExported', done); LS.set('lastWord', Date.now()); }
+const wordName = s => safeName(s.title) + (s.author ? ' - ' + safeName(s.author) : '');
+async function exportWordOne(s){
+  const folder = await Folder.ready();
+  toast('Đang tạo tệp Word…');
+  const ver = (await storyVersions()).get(s.id); const name = wordName(s) + '.docx';
+  if (folder){ await Folder.write(folder, name, await storyDocx(s), 'Word'); await markExported([{s, ver}]); return toast(`Đã lưu “${name}” vào thư mục ${folder.name}\\Word`, 4500); }
+  if (await saveFile(await storyDocx(s), name, DOCX_TYPE)){ await markExported([{s, ver}]); toast(`Đã xuất “${name}”`, 3500); }
+}
+async function exportWord(onlyChanged){
+  const all = await pendingWord(); if (!all.length) return toast('Chưa có truyện nào có chương để xuất.');
+  const list = onlyChanged ? all.filter(x => x.state !== 'same') : all;
+  if (!list.length) return toast('Không có truyện mới hoặc đã sửa kể từ lần xuất trước.', 4000);
+  const nNew = list.filter(x => x.state === 'new').length, nEd = list.filter(x => x.state === 'edited').length;
+  const msg = onlyChanged
+    ? `Sẽ xuất ${list.length} truyện: ${nNew} truyện chưa xuất lần nào, ${nEd} truyện đã sửa sau lần xuất trước.<ul style="margin:.5em 0 0;padding-left:1.2em;max-height:9em;overflow:auto">${list.map(x => `<li>${esc(x.s.title)} <span class="muted small">(${x.state === 'new' ? 'mới' : 'đã sửa'})</span></li>`).join('')}</ul>`
+    : `Xuất lại toàn bộ ${list.length} truyện.`;
+  const fh = Folder.supported() ? await Folder.handle() : null;
+  const where = fh ? `Mỗi truyện là một tệp .docx, lưu thẳng vào thư mục <b>${esc(fh.name)}\\Word</b>; bản đã sửa ghi đè bản cũ cùng tên.` : 'Mỗi truyện là một tệp .docx, gom trong một tệp .zip. Giải nén vào cùng thư mục cũ và chọn <b>ghi đè (Replace)</b> để thay bản cũ.';
+  if (!await ask(`${msg}<br>${where}<br><br>Lưu ý: tệp Word <b>không được mã hoá</b>.`, 'Xuất ra Word')) return;
+  const folder = fh ? await Folder.ready() : null;
+  toast('Đang tạo tệp Word…', 8000);
+  if (folder){
+    for (const x of list) await Folder.write(folder, wordName(x.s) + '.docx', await storyDocx(x.s), 'Word');
+    await markExported(list); toast(`Đã lưu ${list.length} truyện vào thư mục ${folder.name}\\Word`, 4500);
+    if (current.view === 'settings'){ current.params = {_scroll: scrollY}; render(); } return;
+  }
+  const used = new Set(); const entries = [];
+  for (const x of list){ const n = wordName(x.s); let k = n, i = 2; while (used.has(k.toLowerCase())) k = `${n} (${i++})`; used.add(k.toLowerCase()); entries.push({name: k + '.docx', data: new Uint8Array(await (await storyDocx(x.s)).arrayBuffer())}); }
+  const name = `tu-truyen-word-${stamp()}${onlyChanged ? '-moi' : '-tat-ca'}.zip`;
+  if (await saveFile(makeZip(entries), name, 'application/zip')){ await markExported(list); toast(`Đã xuất ${list.length} truyện vào ${name}`, 4500); if (current.view === 'settings'){ current.params = {_scroll: scrollY}; render(); } }
+}
+
+/* ---------- Thư mục trên máy tính (Chrome/Edge): tự lưu bản sao lưu + bản Word ---------- */
+const Folder = {
+  supported(){ return HOSTED && 'showDirectoryPicker' in window; },
+  handle(){ return DB.kvGet('folder'); },
+  async pick(){ const h = await window.showDirectoryPicker({id: 'tu-truyen', mode: 'readwrite'}); await DB.kvSet('folder', h); LS.set('folderName', h.name); return h; },
+  async perm(h, ask){ const o = {mode: 'readwrite'}; try { if (await h.queryPermission(o) === 'granted') return true; if (!ask) return false; return (await h.requestPermission(o)) === 'granted'; } catch { return false; } },
+  async write(h, name, blob, sub){ const d = sub ? await h.getDirectoryHandle(sub, {create: true}) : h; const f = await d.getFileHandle(name, {create: true}); const w = await f.createWritable(); await w.write(blob); await w.close(); },
+  // Chỉ dùng khi bạn bấm Sao lưu / Xuất Word: trả về thư mục đã được phép ghi, hoặc null để tải về như thường
+  async ready(){
+    if (!this.supported()) return null; const h = await this.handle(); if (!h) return null;
+    if (await this.perm(h, true)) return h;
+    toast('Trình duyệt chưa cho ghi vào thư mục, tệp sẽ được tải về như thường.', 4000); return null;
+  }
+};
+const stampTime = () => { const d = new Date(); return `${stamp()}-${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`; };
+
+/* ---------- Sao lưu ---------- */
+// Chỉ chạy khi bạn bấm. Mỗi lần bấm là một tệp riêng (tên có ngày giờ), mã hoá, mở lại bằng mã khoá hiện tại.
+async function exportBackup(){
+  const folder = await Folder.ready();
+  toast('Đang tạo bản sao lưu…');
+  const lock = await DB.kvGet('lock'); const data = await snapshot();
+  const box = await sealJSON(Vault.key, {...data, exportedAt: Date.now()});
+  const out = new Blob([JSON.stringify({app: 'tu-truyen', kind: 'backup', v: 2, mode: 'wrapped', createdAt: new Date().toISOString(), stories: live().length, lock: {salt: lock.salt, iter: lock.iter, iv: lock.iv, wrapped: lock.wrapped}, ...box})], {type: 'application/json'});
+  const name = `tu-truyen-sao-luu-${stampTime()}.json`;
+  if (folder){ await Folder.write(folder, name, out, 'Sao lưu'); toast(`Đã lưu ${name} vào thư mục ${folder.name}\\Sao lưu`, 5000); }
+  else { if (!await saveFile(out, name, 'application/json')) return; toast(`Đã xuất ${name}`, 4000); }
+  LS.set('lastBackup', Date.now());
+}
+async function importBackup(file){
+  let box; try { box = JSON.parse(await file.text()); } catch { return toast('Tệp không đọc được. Hãy chọn tệp .json do Tủ truyện xuất ra.', 5000); }
+  if (box?.app !== 'tu-truyen' || box.kind !== 'backup') return toast('Đây không phải bản sao lưu của Tủ truyện.', 5000);
+  const pass = await askPass(`Bản sao lưu ngày ${fmtTime(Date.parse(box.createdAt))} (${box.stories ?? '?'} truyện). Nhập mã khoá đã dùng khi xuất bản sao lưu này.`, 'Mở bản sao lưu');
+  if (pass == null) return;
+  let data;
+  try {
+    if (box.mode === 'wrapped'){ const pk = await pbkdf2(pass, unb64(box.lock.salt), box.lock.iter); const raw = await aesDec(pk, unb64(box.lock.iv), unb64(box.lock.wrapped)); data = await openJSON(await importAes(raw), box); raw.fill(0); }
+    else data = await openJSON(await pbkdf2(pass, unb64(box.salt), box.iter), box);
+  } catch { return toast('Sai mã khoá của bản sao lưu.', 4000); }
+  const choice = await modal(`<p>Khôi phục ${data.stories.filter(s => !s.deleted).length} truyện. Chọn cách khôi phục:</p>
+    <div style="display:grid;gap:8px"><button class="btn primary" data-pick="merge">Gộp vào thư viện hiện có</button><span class="hint">Giữ truyện đang có; bản nào mới hơn sẽ được giữ.</span>
+    <button class="btn danger" data-pick="replace">Thay thế toàn bộ</button><span class="hint">Xoá thư viện trên thiết bị này rồi chép bản sao lưu vào.${Auth.info ? ' Bản trên Google Drive cũng bị ghi đè ở lần đồng bộ tới.' : ''}</span></div>
+    <div class="row2"><button class="btn" data-r="no">Huỷ</button></div>`, (m, done) => m.addEventListener('click', e => { const b = e.target.closest('[data-pick]'); if (b) done(b.dataset.pick); }));
+  if (!choice) return;
+  if (choice === 'merge'){
+    const local = await snapshot();
+    const ms = mergeRecords(local.stories, data.stories, 'id'), mc = mergeRecords(local.chapters, data.chapters, 'id'), mp = mergeRecords(local.progress, data.progress, 'storyId');
+    await applyRecords({stories: ms.toLocal, chapters: mc.toLocal, progress: mp.toLocal});
+  } else {
+    for (const s of ['stories', 'chapters', 'texts', 'progress']) await DB.clear(s);
+    await applyRecords(data); if (Auth.info) LS.set('forceNext', true);
+  }
+  afterChange('lib'); afterChange('state'); await loadAll(); toast('Đã khôi phục bản sao lưu', 3500); go('library');
+}
+
+/* ---------- Cài đặt ---------- */
+async function Settings(){
+  const p = Prefs.get(), info = Auth.info, lock = await DB.kvGet('lock');
+  let est = ''; try { const e = await navigator.storage?.estimate?.(); if (e) est = `Đang dùng ${(e.usage / 1048576).toFixed(1)} MB trên thiết bị này.`; } catch {}
+  let persisted = false; try { persisted = await navigator.storage?.persisted?.(); } catch {}
+  const devices = LS.get('devices', []).filter(d => devStatus(d) !== 'removed').sort((a, b) => (b.id === myDeviceId()) - (a.id === myDeviceId()) || (b.lastSeen || 0) - (a.lastSeen || 0));
+  const kindName = lock.kind === 'pin' ? 'mã PIN' : 'mật khẩu';
+  const wordInfo = {new: 0, edited: 0}; (await pendingWord()).forEach(x => { if (x.state !== 'same') wordInfo[x.state]++; });
+  app().innerHTML = `<div class="wrap">
+  <header class="top"><button class="link" data-act="back">← Tủ truyện</button><h1 style="font-size:1.25rem">Cài đặt</h1></header>
+
+  <section class="set"><h2>Hiển thị</h2><div id="disp">${displayControls(p)}</div>
+    <p class="sample">Đêm ấy gió biển thổi mạnh, ngọn đèn trên mũi đá vẫn quay đều từng vòng.</p></section>
+
+  <section class="set"><h2>Bảo mật</h2>
+    <div class="line"><span>Đang khoá bằng <b>${kindName}</b></span><button class="btn" data-act="chpass">Đổi mã khoá</button></div>
+    <div class="line"><span>Hỏi mã khi mở ứng dụng trên máy này</span></div>
+    <div class="seg">${[['never','Không khoá'],[0,'Ngay'],[1,'1 phút'],[5,'5 phút'],[15,'15 phút']].map(([v, l]) => `<button data-autolock="${v}" aria-pressed="${v === 'never' ? Lock.remember : !Lock.remember && p.autoLock === v}">${l}</button>`).join('')}</div>
+    <p class="hint">${Lock.remember ? 'Máy này mở thẳng vào tủ truyện. Truyện vẫn được mã hoá; bản trên Google Drive, tệp sao lưu và máy mới vẫn cần mã khoá.' : 'Sau khoảng thời gian đã chọn kể từ lúc rời ứng dụng, cần nhập mã khoá để mở lại.'} Nếu quên mã khoá, không có cách lấy lại — hãy ghi ra chỗ an toàn.</p></section>
+
+  <section class="set"><h2>Đồng bộ Google</h2>${syncSection(info)}</section>
+
+  <section class="set"><h2>Thiết bị đã đăng nhập</h2>
+    <div class="line"><label style="display:grid;gap:4px;flex:1;min-width:12rem"><span class="small muted">Tên thiết bị này</span><input id="devname" class="field" value="${esc(myDeviceName())}"></label><button class="btn" data-act="rename">Lưu tên</button></div>
+    ${info ? (devices.length ? `<div>${devices.map(d => devRow(d)).join('')}</div>` : '<p class="hint">Danh sách sẽ hiện sau lần đồng bộ đầu tiên.</p>') : '<p class="hint">Đăng nhập Google để xem và quản lý các thiết bị dùng chung thư viện.</p>'}
+    ${info ? '<p class="hint">Thiết bị bị đăng xuất sẽ ngừng đồng bộ ngay lần kế tiếp nó mở ứng dụng có mạng. Truyện đã lưu trên thiết bị đó vẫn được khoá bằng mã khoá.</p>' : ''}
+  </section>
+
+  <section class="set"><h2>Thư mục trên máy tính</h2>${folderSection(await Folder.handle())}</section>
+
+  <section class="set"><h2>Sao lưu</h2>
+    <p class="hint" style="margin:0">Bản sao lưu là một tệp .json chứa toàn bộ truyện, chương và tiến độ đọc, đã mã hoá. Có thể cất ở bất kỳ đâu và khôi phục trên máy khác mà không cần Google.${LS.get('lastBackup', 0) ? ` Lần xuất gần nhất: ${fmtTime(LS.get('lastBackup'))}.` : ''}</p>
+    <div class="line" style="justify-content:flex-start"><button class="btn primary" data-act="export">Xuất bản sao lưu</button><label class="btn" for="restore">Khôi phục từ tệp…</label><input id="restore" type="file" accept=".json,application/json" hidden></div>
+  </section>
+
+  <section class="set"><h2>Xuất ra Word</h2>
+    <p class="hint" style="margin:0">Mỗi truyện thành một tệp .docx đặt theo tên truyện (gom trong một tệp .zip), gồm tên truyện, tác giả, tag và các chương. Mở được bằng Word và nhập ngược lại vào Tủ truyện được. Tệp Word <b>không mã hoá</b> và không chứa vị trí đang đọc.</p>
+    <p style="margin:0" class="num">${wordInfo.new} truyện chưa xuất · ${wordInfo.edited} truyện đã sửa sau lần xuất trước${LS.get('lastWord', 0) ? ` <span class="muted small">· lần xuất gần nhất ${fmtTime(LS.get('lastWord'))}</span>` : ''}</p>
+    <div class="line" style="justify-content:flex-start"><button class="btn primary" data-act="wordnew" ${wordInfo.new + wordInfo.edited ? '' : 'disabled'}>Xuất truyện mới và đã sửa (${wordInfo.new + wordInfo.edited})</button><button class="btn" data-act="wordall">Xuất lại tất cả</button></div>
+    ${HOSTED ? '' : '<p class="hint">Trong bản xem thử này, trình xem có thể chặn việc tải tệp xuống.</p>'}
+  </section>
+
+  <section class="set"><h2>Bảng thay từ chung</h2>
+    <div class="line"><span>${termsOf(GLOBAL_ID).length} cặp từ áp dụng cho mọi truyện</span><button class="btn" data-act="gterms">Mở bảng</button></div>
+    <p class="hint" style="margin:0">Bảng riêng cho từng truyện: mở truyện → nút “Thay từ”. Khi đang đọc, bôi đen một từ rồi bấm “Thay từ này” để thêm nhanh.</p>
+  </section>
+
+  <section class="set"><h2>Thùng rác</h2>
+    <div class="line"><span>${trashed().length ? `${trashed().length} truyện đang chờ xoá vĩnh viễn` : 'Thùng rác trống'}</span><button class="btn" data-act="trash">Mở Thùng rác</button></div>
+  </section>
+
+  <section class="set"><h2>Lưu trữ trên thiết bị</h2>
+    <p class="hint" style="margin:0">${est} ${persisted ? 'Trình duyệt đã cho phép lưu lâu dài.' : 'Trình duyệt có thể dọn dữ liệu khi máy thiếu dung lượng — hãy xuất bản sao lưu định kỳ.'}</p>
+    <div class="line" style="justify-content:flex-start"><button class="btn danger" data-act="wipe">Xoá toàn bộ dữ liệu trên thiết bị này</button></div>
+  </section>
+  <p class="hint" style="padding-top:16px">Tủ truyện ${VERSION}</p>
+  </div>`;
+  const root = app();
+  $('#restore', root).onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) importBackup(f); };
+  root.onclick = async e => {
+    if (handleDisplay(e)){ $('#disp').innerHTML = displayControls(Prefs.get()); return; }
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.autolock != null){
+      if (b.dataset.autolock === 'never') await rememberKeys();
+      else { Prefs.set({autoLock: +b.dataset.autolock}); if (Lock.remember) await forgetKeys(); }
+      toast(Lock.remember ? 'Máy này sẽ không hỏi mã khi mở' : 'Đã bật khoá khi mở ứng dụng');
+      current.params = {_scroll: scrollY}; return render();
+    }
+    if (b.dataset.revoke){ if (!await ask('Đăng xuất thiết bị này khỏi đồng bộ?', 'Đăng xuất thiết bị', true)) return; const devs = LS.get('devices', []); const d = devs.find(x => x.id === b.dataset.revoke); d.revokedAt = Date.now(); LS.set('devices', devs); afterChange('state'); await Sync.manual(); return render(); }
+    if (b.dataset.untrash){ await restoreStory(b.dataset.untrash); await loadAll(); toast('Đã khôi phục truyện'); current.params = {_scroll: scrollY}; return render(); }
+    if (b.dataset.purge){ const s = S.stories.find(x => x.id === b.dataset.purge); if (!await ask(`Xoá vĩnh viễn “${esc(s.title)}”? Không thể hoàn tác, kể cả trên các thiết bị đồng bộ. Chỉ bản sao lưu cũ còn giữ truyện này.`, 'Xoá vĩnh viễn', true)) return; await deleteStory(s.id); await loadAll(); toast('Đã xoá vĩnh viễn'); current.params = {_scroll: scrollY}; return render(); }
+    if (b.dataset.remove){ const devs = LS.get('devices', []); const d = devs.find(x => x.id === b.dataset.remove); d.removedAt = Date.now(); LS.set('devices', devs); afterChange('state'); await Sync.manual(); return render(); }
+    const a = b.dataset.act;
+    if (a === 'back') return history.length > 1 ? history.back() : go('library');
+    if (a === 'rename'){ const v = $('#devname').value.trim(); if (!v) return; LS.set('deviceName', v); LS.set('nameAt', Date.now()); afterChange('state'); toast('Đã đổi tên thiết bị'); return; }
+    if (a === 'saveclient'){ LS.set('clientId', $('#clientid').value.trim()); Auth._p = null; Auth.gis().catch(() => {}); toast('Đã lưu Client ID'); return render(); }
+    if (a === 'signin'){ try { await Auth.signIn(); toast('Đã đăng nhập Google'); await Sync.run({}); } catch (err){ toast(err.message, 6000); } return render(); }
+    if (a === 'syncnow'){ await Sync.manual(); return render(); }
+    if (a === 'signout'){ if (await ask('Đăng xuất Google trên thiết bị này? Truyện vẫn còn trên máy để đọc offline.', 'Đăng xuất')){ await Auth.signOut(); toast('Đã đăng xuất Google'); render(); } return; }
+    if (a === 'export') return exportBackup();
+    if (a === 'wordnew') return exportWord(true);
+    if (a === 'wordall') return exportWord(false);
+    if (a === 'trash') return go('trash');
+    if (a === 'gterms') return go('terms', {id: GLOBAL_ID});
+    if (a === 'pickfolder'){ try { const h = await Folder.pick(); toast(`Đã chọn thư mục ${h.name}`); } catch (err){ if (err.name !== 'AbortError') toast('Không chọn được thư mục: ' + err.message, 5000); } current.params = {_scroll: scrollY}; return render(); }
+    if (a === 'folderoff'){ if (!await ask('Bỏ thư mục này? Các tệp đã lưu vẫn giữ nguyên. Sau này bấm Sao lưu / Xuất Word thì tệp sẽ được tải về như thường.', 'Bỏ thư mục')) return; await DB.del('kv', 'folder'); toast('Đã bỏ thư mục'); current.params = {_scroll: scrollY}; return render(); }
+    if (a === 'chpass') return changePassFlow();
+    if (a === 'wipe') return wipeFlow();
+  };
+}
+function TrashView(){
+  const list = trashed().sort((a, b) => (b.trashedAt || 0) - (a.trashedAt || 0));
+  app().innerHTML = `<div class="wrap">
+  <header class="top"><button class="link" data-act="back">← Quay lại</button><h1 style="font-size:1.25rem">Thùng rác</h1></header>
+  <p class="hint" style="margin:14px 0 0">Truyện bị xoá nằm ở đây, vẫn đủ chương và tiến độ. Bấm <b>Khôi phục</b> để đưa về Tủ truyện, hoặc <b>Xoá vĩnh viễn</b> để xoá hẳn trên mọi thiết bị đồng bộ.</p>
+  ${list.length ? list.map(s => `<div class="dev"><div><b>${esc(s.title)}</b><div class="small muted">${esc(s.author || '')}${s.author ? ' · ' : ''}${chaptersOf(s.id).length} chương · xoá ${fmtAgo(s.trashedAt)}</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn primary" data-untrash="${s.id}">Khôi phục</button><button class="btn danger" data-purge="${s.id}">Xoá vĩnh viễn</button></div></div>`).join('') : '<p class="empty">Thùng rác trống.</p>'}
+  </div>`;
+  app().onclick = async e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.act === 'back') return history.length > 1 ? history.back() : go('library');
+    if (b.dataset.untrash){ await restoreStory(b.dataset.untrash); await loadAll(); toast('Đã khôi phục truyện'); return TrashView(); }
+    if (b.dataset.purge){ const s = S.stories.find(x => x.id === b.dataset.purge); if (!await ask(`Xoá vĩnh viễn “${esc(s.title)}”? Không thể hoàn tác, kể cả trên các thiết bị đồng bộ. Chỉ bản sao lưu hoặc tệp Word đã xuất còn giữ truyện này.`, 'Xoá vĩnh viễn', true)) return; await deleteStory(s.id); await loadAll(); toast('Đã xoá vĩnh viễn'); TrashView(); }
+  };
+}
+function folderSection(h){
+  if (!Folder.supported()) return `<p class="hint" style="margin:0">Lưu thẳng vào một thư mục (ví dụ <b>D:\\Claude Cowork\\Tủ truyện</b>) chỉ dùng được trên <b>Chrome hoặc Edge ở máy tính</b>, với bản Tủ truyện đã cài lên trang web riêng. Ở đây, bấm Sao lưu / Xuất Word thì tệp được tải về thư mục Tải xuống.</p>`;
+  if (!h) return `<p class="hint" style="margin:0">Chọn thư mục để mỗi lần <b>bạn bấm</b> Sao lưu hoặc Xuất Word, tệp được lưu thẳng vào đó, không phải chọn chỗ lưu. Ứng dụng không tự lưu khi bạn không bấm.</p>
+    <div class="line" style="justify-content:flex-start"><button class="btn primary" data-act="pickfolder">Chọn thư mục…</button></div>`;
+  return `<div class="line"><span>Thư mục lưu: <b>${esc(h.name)}</b></span></div>
+    <p class="hint" style="margin:0">Khi bạn bấm <b>Xuất bản sao lưu</b>: mỗi lần là một tệp riêng trong thư mục con “Sao lưu”. Khi bạn bấm <b>Xuất ra Word</b>: tệp .docx vào thư mục con “Word”. Lần đầu sau khi mở trình duyệt, Chrome có thể hỏi cho phép ghi — bấm Cho phép.</p>
+    <div class="line" style="justify-content:flex-start"><button class="btn" data-act="pickfolder">Đổi thư mục…</button><button class="btn danger" data-act="folderoff">Bỏ thư mục</button></div>`;
+}
+function syncSection(info){
+  if (!HOSTED) return `<p class="hint" style="margin:0">Đồng bộ Google chỉ chạy trên bản Tủ truyện bạn tự cài lên trang web riêng (xem hướng dẫn đi kèm). Bản xem thử này vẫn lưu truyện, khoá bằng mã và đọc offline bình thường.</p>`;
+  if (!Auth.clientId()) return `<p class="hint" style="margin:0">Nhập Google Client ID (tạo theo hướng dẫn đi kèm). Có thể ghi sẵn vào tệp config.js để khỏi nhập trên từng máy.</p><div class="line"><input id="clientid" class="field" style="flex:1;min-width:12rem" placeholder="xxxx.apps.googleusercontent.com"><button class="btn primary" data-act="saveclient">Lưu</button></div>`;
+  if (!info) return `<p class="hint" style="margin:0">Đăng nhập để đồng bộ truyện giữa máy tính và điện thoại. Vị trí đọc chỉ lưu riêng trên từng máy. Dữ liệu nằm trong vùng ẩn của Google Drive của chính bạn và được mã hoá trước khi gửi lên.</p><div class="line" style="justify-content:flex-start"><button class="btn primary" data-act="signin">Đăng nhập bằng Google</button></div>`;
+  return `<div class="line"><span>Tài khoản <b>${esc(info.email)}</b></span></div><p class="hint" id="sync-status" style="margin:0">${Sync.statusText()}</p>
+    <div class="line" style="justify-content:flex-start"><button class="btn primary" data-act="syncnow">Đồng bộ ngay</button><button class="btn" data-act="signout">Đăng xuất Google</button></div>`;
+}
+function devRow(d){
+  const me = d.id === myDeviceId(); const st = devStatus(d);
+  const pill = me ? '<span class="pill ok">thiết bị này</span>' : st === 'active' ? '' : st === 'pending' ? '<span class="pill warn">chờ đăng xuất</span>' : '<span class="pill">đã đăng xuất</span>';
+  const btn = me ? '' : st === 'active' ? `<button class="btn danger" data-revoke="${d.id}">Đăng xuất</button>` : `<button class="btn" data-remove="${d.id}">Xoá khỏi danh sách</button>`;
+  return `<div class="dev"><div><b>${esc(d.name || `${d.os} · ${d.br}`)}</b>${pill}<div class="small muted">${esc(d.os || '')} · ${esc(d.br || '')} · đăng nhập ${fmtTime(d.loginAt)} · hoạt động ${fmtAgo(d.lastSeen)}</div></div>${btn}</div>`;
+}
+async function changePassFlow(){
+  const lock = await DB.kvGet('lock');
+  const res = await modal(`<form class="form" style="padding:0" id="cp"><p>Đổi mã khoá</p>
+    <label><span>Mã khoá hiện tại</span><input class="field" id="cp-old" type="password" ${lock.kind === 'pin' ? 'inputmode="numeric"' : ''} required></label>
+    <div class="seg"><button type="button" data-k="pin" aria-pressed="${lock.kind === 'pin'}">Mã PIN</button><button type="button" data-k="password" aria-pressed="${lock.kind === 'password'}">Mật khẩu</button></div>
+    <label><span>Mã khoá mới</span><input class="field" id="cp-new" type="password" required></label>
+    <label><span>Nhập lại mã khoá mới</span><input class="field" id="cp-new2" type="password" required></label>
+    <p class="hint" id="cp-hint"></p>${Auth.info ? '<p class="hint">Sau khi đổi, các thiết bị khác cũng phải đổi sang mã khoá mới mới đồng bộ được.</p>' : ''}
+    <div class="row2"><button type="button" class="btn" data-r="no">Huỷ</button><button class="btn primary" type="submit">Đổi mã khoá</button></div></form>`, (m, done) => {
+    let kind = lock.kind; const f = m.querySelector('form'); const hint = m.querySelector('#cp-hint');
+    const setK = k => { kind = k; m.querySelectorAll('[data-k]').forEach(b => b.setAttribute('aria-pressed', b.dataset.k === k)); ['#cp-new', '#cp-new2'].forEach(s => m.querySelector(s).inputMode = k === 'pin' ? 'numeric' : 'text'); hint.textContent = passRule(k); };
+    setK(kind); m.querySelectorAll('[data-k]').forEach(b => b.onclick = () => setK(b.dataset.k));
+    f.onsubmit = e => { e.preventDefault(); const n1 = m.querySelector('#cp-new').value, n2 = m.querySelector('#cp-new2').value; if (!validPass(kind, n1)) return hint.textContent = passRule(kind); if (n1 !== n2) return hint.textContent = 'Hai lần nhập không khớp.'; done({old: m.querySelector('#cp-old').value, kind, pass: n1}); };
+  });
+  if (!res) return; toast('Đang đổi mã khoá…');
+  if (await changeLock(res.old, res.kind, res.pass)){ toast('Đã đổi mã khoá'); render(); } else toast('Mã khoá hiện tại không đúng.');
+}
+async function wipeFlow(){
+  if (!await ask('Xoá toàn bộ truyện, tiến độ và mã khoá trên thiết bị này? Dữ liệu trên Google Drive và bản sao lưu không bị ảnh hưởng.', 'Xoá trên thiết bị này', true)) return;
+  await wipeDevice(); location.reload();
+}
+async function wipeDevice(){
+  for (const s of Object.keys(STORES)) await DB.clear(s);
+  ['auth', 'token', 'devices', 'lastSync', 'libSeen', 'dirtyLib', 'dirtyState', 'forceNext', 'attempts'].forEach(k => LS.del(k));
+  Vault.key = null; Vault.syncKey = null;
+}
+
+/* ---------- Màn hình khoá ---------- */
+const Lock = {
+  hiddenAt: 0, remember: false,
+  async show(){
+    const lock = await DB.kvGet('lock'); const el = $('#lock'); el.hidden = false; app().innerHTML = '';
+    if (!lock) return this.setup(el);
+    const pin = lock.kind === 'pin';
+    el.innerHTML = `<form class="lock-box" id="lk"><h1>Tủ truyện</h1><div class="rule"></div><p class="muted" style="margin:0">Nhập ${pin ? 'mã PIN' : 'mật khẩu'} để mở</p>
+      <input id="lk-p" class="field" type="password" ${pin ? 'inputmode="numeric" pattern="[0-9]*"' : ''} autocomplete="current-password" aria-label="${pin ? 'Mã PIN' : 'Mật khẩu'}" required>
+      <button class="btn primary big" type="submit">Mở khoá</button><p class="err" id="lk-e" role="alert"></p>
+      <button type="button" class="link" id="lk-f" style="justify-self:center">Quên mã khoá?</button></form>`;
+    const inp = $('#lk-p'), err = $('#lk-e'); setTimeout(() => inp.focus(), 50);
+    $('#lk-f').onclick = async () => { if (await ask('Không có cách lấy lại mã khoá vì truyện được mã hoá bằng chính nó. Bạn có thể xoá dữ liệu trên thiết bị này và bắt đầu lại; nếu có bản sao lưu hoặc dữ liệu trên Google Drive thì cần đúng mã khoá cũ để mở chúng.', 'Xoá dữ liệu và bắt đầu lại', true)){ await wipeDevice(); location.reload(); } };
+    $('#lk').onsubmit = async e => {
+      e.preventDefault(); const at = LS.get('attempts', {n: 0, until: 0});
+      if (at.until > Date.now()){ err.textContent = `Thử lại sau ${Math.ceil((at.until - Date.now()) / 1000)} giây.`; return; }
+      err.textContent = 'Đang mở khoá…';
+      const raw = await unwrap(inp.value);
+      if (!raw){ at.n++; if (at.n >= 5) at.until = Date.now() + Math.min(300, 30 * 2 ** (at.n - 5)) * 1000; LS.set('attempts', at); err.textContent = at.until > Date.now() ? `Sai quá nhiều lần. Thử lại sau ${Math.ceil((at.until - Date.now()) / 1000)} giây.` : `Sai ${pin ? 'mã PIN' : 'mật khẩu'}.`; inp.value = ''; inp.focus(); return; }
+      Vault.key = await importAes(raw); raw.fill(0); LS.del('attempts');
+      if (HOSTED && Auth.info){
+        // Lần bấm “Mở khoá” cũng dùng để gia hạn phiên Google, nhờ vậy điện thoại kéo bản mới ngay.
+        const tokP = Auth.token() ? Promise.resolve() : Auth.request('').catch(() => {});
+        const pass = inp.value;
+        Promise.all([tokP, deriveSyncKey(pass)]).then(() => Auth.token() && Sync.run({quiet: true}).catch(() => {})).finally(() => Sync.paint());
+      }
+      inp.value = ''; this.unlocked();
+    };
+  },
+  setup(el){
+    let kind = 'pin';
+    el.innerHTML = `<form class="lock-box" id="st"><h1>Tủ truyện</h1><div class="rule"></div>
+      <p style="margin:0">Đặt mã khoá cho thư viện của bạn. Mọi truyện sẽ được mã hoá bằng mã này; không có mã thì không ai mở được.</p>
+      <div class="seg"><button type="button" data-k="pin" aria-pressed="true">Mã PIN</button><button type="button" data-k="password" aria-pressed="false">Mật khẩu</button></div>
+      <input id="st-1" class="field" type="password" inputmode="numeric" autocomplete="new-password" placeholder="Mã khoá mới" required>
+      <input id="st-2" class="field" type="password" inputmode="numeric" autocomplete="new-password" placeholder="Nhập lại" required>
+      <p class="hint" id="st-h">Mã PIN gồm ít nhất 6 chữ số.</p>
+      <label class="check" style="text-align:left"><input type="checkbox" id="st-r" checked> Không hỏi mã khi mở trên máy này (truyện vẫn được mã hoá)</label>
+      <button class="btn primary big" type="submit">Tạo thư viện</button><p class="err" id="st-e" role="alert"></p>
+      <p class="hint">Hãy ghi nhớ mã khoá. Nếu đã có thư viện trên máy khác, dùng đúng mã khoá đó để đồng bộ được.</p></form>`;
+    $$('[data-k]', el).forEach(b => b.onclick = () => { kind = b.dataset.k; $$('[data-k]', el).forEach(x => x.setAttribute('aria-pressed', x === b)); ['#st-1', '#st-2'].forEach(s => $(s).inputMode = kind === 'pin' ? 'numeric' : 'text'); $('#st-h').textContent = passRule(kind); });
+    $('#st').onsubmit = async e => {
+      e.preventDefault(); const a = $('#st-1').value, b = $('#st-2').value, er = $('#st-e');
+      if (!validPass(kind, a)) return er.textContent = passRule(kind);
+      if (a !== b) return er.textContent = 'Hai lần nhập không khớp.';
+      er.textContent = 'Đang tạo…'; await createLock(kind, a); if ($('#st-r').checked) await rememberKeys(); await seedSample(); this.unlocked();
+    };
+  },
+  async unlocked(){
+    const el = $('#lock'); el.hidden = true; el.innerHTML = '';
+    await loadAll(); await ensureLongSample().catch(() => {});
+    current = {view: 'library', params: {}}; try { history.replaceState({view: 'library', params: {}}, ''); } catch {}
+    render();
+  },
+  lock(){
+    if (current.view === 'reader') Reader.close();
+    $$('.scrim').forEach(x => x.remove());
+    Vault.key = null; Vault.syncKey = null; S.stories = []; S.chapters = new Map(); S.progress = new Map();
+    this.show();
+  }
+};
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden'){
+    Lock.hiddenAt = Date.now();
+    if (Vault.key && Reader.el) Reader.save();
+    if (Vault.key && Vault.syncKey && Auth.token() && (LS.get('dirtyLib') || LS.get('dirtyState'))) Sync.run({quiet: true}).catch(() => {});
+    if (Vault.key && !Lock.remember && Prefs.get().autoLock === 0) Lock.lock();
+  } else {
+    if (Vault.key && !Lock.remember && Lock.hiddenAt && Date.now() - Lock.hiddenAt >= Prefs.get().autoLock * 60000) Lock.lock();
+    else if (Vault.key && Vault.syncKey && Auth.token()) Sync.run({quiet: true}).catch(() => {});
+  }
+});
+
+/* ---------- Truyện mẫu (sáng tác riêng cho bản thử) ---------- */
+async function seedSample(){
+  if (live().length || LS.get('seeded', false)) return; LS.set('seeded', true);
+  const s = await saveStory({title: 'Ngọn đèn ở mũi Đá Trắng', author: 'Truyện mẫu', tags: ['mẫu', 'truyện ngắn'], note: 'Truyện mẫu để thử các tính năng. Có thể xoá trong “Sửa thông tin”.'});
+  await addChapters(s.id, textToChapters(`Chương 1: Người gác đèn
+Ông Tư gác ngọn đèn ở mũi Đá Trắng đã hai mươi năm. Mỗi chiều, khi nắng vừa ngả sang màu đồng, ông leo một trăm mười hai bậc thang xoắn, lau kính, châm dầu và ngồi đợi trời tối.
+Ngọn đèn không cần ông nhìn mới sáng. Nhưng ông vẫn nhìn, như người ta vẫn nhìn bếp lửa dù biết nó chẳng tắt.
+Dưới chân mũi đá là làng chài nhỏ. Từ trên cao, mái nhà trông như những viên sỏi xám ai đó rải dọc bờ cát.
+Đêm nào có thuyền ra khơi, ông đếm. Sáng nào thuyền về, ông đếm lại. Hai con số bằng nhau thì ông mới đi ngủ.
+Chương 2: Con thuyền lạc
+Đêm mười bốn tháng Chạp, gió mùa thổi rát mặt. Mười một chiếc ra khơi, đến gần sáng mới về mười.
+Ông Tư cầm ống nhòm quét mặt biển từng khoảng một. Sương dày đến mức ánh đèn chỉ đi được nửa đường đã bị nuốt mất.
+Ông nhớ có lần cha ông nói: đèn không phải để thấy thuyền, mà để thuyền thấy mình. Ông bèn tháo tấm chắn phía bắc, để luồng sáng quét thấp xuống mặt nước.
+Gần năm giờ, một đốm sáng nhỏ chớp lên ba lần ngoài xa. Ông chớp đèn đáp lại, rồi ngồi xuống bậc thang, tay vẫn còn run.
+Chương 3: Buổi sáng
+Chiếc thuyền thứ mười một cập bến khi mặt trời vừa nhô khỏi biển. Người lái là cậu Bảy, mười chín tuổi, lần đầu tự đi một mình.
+Cậu leo lên tận đỉnh đèn, đặt xuống bàn một con cá thu còn quẫy. Ông Tư không nói gì, chỉ rót cho cậu một chén trà.
+Từ hôm ấy, mỗi chiều có thêm một người leo một trăm mười hai bậc thang. Ngọn đèn vẫn sáng như cũ, nhưng người ngồi đếm thuyền thì đã là hai.`, true));
+  await addChapters(s.id, LONG_SAMPLE());
+  LS.set('seeded2', true); LS.set('dirtyLib', false); LS.set('dirtyState', false);
+}
+// Chương mẫu dài (tự viết) để thử cuộn dọc và lật trang; thêm vào truyện mẫu cũ nếu còn thiếu
+async function ensureLongSample(){
+  if (LS.get('seeded2', false)) return; LS.set('seeded2', true);
+  const s = live().find(x => x.author === 'Truyện mẫu' && x.title === 'Ngọn đèn ở mũi Đá Trắng');
+  if (s && chaptersOf(s.id).length < 4){ await addChapters(s.id, LONG_SAMPLE()); await loadAll(); }
+}
+const LONG_SAMPLE = () => [{title: 'Chương 4: Mùa gió chướng (chương mẫu dài)', content: [
+  'Năm ấy gió chướng về sớm hơn mọi năm. Mới giữa tháng Mười, mặt biển trước mũi Đá Trắng đã nổi những dải bọt trắng dài như ai kéo chỉ, và mùi muối đặc đến mức phơi áo cả ngày vẫn không khô.',
+  'Cậu Bảy giờ đã quen với một trăm mười hai bậc thang. Cậu leo nhanh hơn ông Tư, nhưng lần nào lên tới nơi cũng phải đứng thở một lúc, tay bám vào lan can sắt đã ngả màu gỉ. Ông Tư bảo đó không phải vì mệt, mà vì người trẻ chưa học được cách thở theo bậc thang.',
+  'Buổi chiều đầu tiên của mùa gió, ông dạy cậu cách đọc trời. Không phải bằng sách, mà bằng những thứ nhỏ nhặt: màu mây phía tây lúc mặt trời còn cách mặt nước một gang tay, tiếng chim mòng kêu dồn hay kêu thưa, độ nghiêng của khói bếp dưới làng.',
+  '“Mây vàng mỡ gà là gió lên,” ông nói. “Mây xám chì mà thấp là mưa tới. Còn mây trắng mà kéo thành vệt dài như vây cá thì mai đừng cho thuyền nhỏ ra.”',
+  'Cậu Bảy chép từng câu vào một cuốn vở học trò bìa xanh. Chữ cậu to và nghiêng, mỗi trang chỉ được chừng mười dòng. Ông Tư nhìn qua vai cậu, không nói gì, nhưng tối hôm ấy ông lục trong rương ra một cuốn sổ cũ hơn, giấy đã ngả vàng, đưa cho cậu.',
+  'Đó là sổ ghi chép của cha ông. Trong ấy có những ngày tháng từ rất lâu, những con số đếm thuyền, những dòng ghi gió hướng nào, sóng cao bao nhiêu, và thỉnh thoảng một câu không liên quan gì đến biển: “Hôm nay con gái nhà ông Sáu lấy chồng, làng mổ heo.” Hay: “Trời lạnh, thèm một chén rượu nếp.”',
+  'Cậu Bảy đọc cuốn sổ suốt ba đêm liền. Đến đêm thứ tư, cậu hỏi ông Tư vì sao người gác đèn phải ghi cả những chuyện không dính dáng gì tới ngọn đèn.',
+  'Ông Tư ngẫm nghĩ một lúc lâu. Ngoài kia, luồng sáng vẫn quay đều, cứ mỗi mười hai giây lại lướt qua ô cửa kính, soi lên mặt hai người một vệt trắng rồi tắt.',
+  '“Vì ngồi trên này lâu, người ta dễ quên mình cũng là người trong làng,” ông nói. “Ghi lại thì nhớ. Nhớ thì mới biết mình giữ đèn cho ai.”',
+  'Giữa mùa gió có một đêm mất điện cả vùng. Máy phát dự phòng dưới chân tháp kêu khục khặc mấy tiếng rồi im bặt. Ông Tư lúc ấy đang sốt, nằm đắp chăn dưới nhà. Cậu Bảy chạy xuống, tay cầm đèn pin, mở nắp máy ra mà không biết bắt đầu từ đâu.',
+  'Cậu nhớ trong sổ của cha ông Tư có một trang vẽ sơ đồ máy phát bằng bút chì. Cậu leo ngược lên phòng đèn, lật tìm, rồi lại chạy xuống. Trang giấy ghi rõ: khi máy tắt giữa chừng, việc đầu tiên là xem van dầu có bị kẹt cặn hay không.',
+  'Van dầu kẹt thật. Cậu dùng mũi dao gạt lớp cặn đen ra, thổi mạnh mấy hơi, lắp lại, rồi giật dây khởi động. Lần thứ nhất máy không nổ. Lần thứ hai máy rung lên một chút rồi tắt. Đến lần thứ ba, tiếng máy đều đặn vang lên trong đêm, và phía trên đầu cậu, ngọn đèn sáng trở lại.',
+  'Sáng hôm sau, ông Tư đỡ sốt. Ông không hỏi chuyện đêm qua, chỉ nhìn thấy cuốn sổ cũ để mở trên bàn, trang sơ đồ máy phát có thêm một dấu tay dính dầu đen. Ông cầm bút, ghi thêm bên lề một dòng nhỏ: “Bảy sửa máy, đèn tắt chừng bốn phút.”',
+  'Từ đó, cuốn sổ có hai nét chữ. Nét chữ nhỏ và gọn của ông Tư ghi gió, sóng, số thuyền. Nét chữ to và nghiêng của cậu Bảy ghi những thứ khác: hôm nay bà Năm bán xôi đầu dốc nghỉ chợ, con chó vàng nhà ông Sáu đẻ bốn con, mùa này cá cơm về nhiều.',
+  'Cuối mùa gió, có một đoàn người trên tỉnh về khảo sát. Họ nói vài năm nữa ngọn đèn sẽ được lắp hệ thống tự động, không cần người trực nữa. Ông Tư nghe xong chỉ gật đầu, rót trà mời khách như mọi ngày.',
+  'Tối hôm ấy, cậu Bảy hỏi ông có buồn không. Ông cười, bảo đèn tự sáng được là chuyện tốt, thuyền về an toàn là được. Rồi ông chỉ ra phía làng, nơi những ô cửa sổ bắt đầu lên đèn từng cái một.',
+  '“Máy thì giữ được đèn,” ông nói. “Nhưng đếm thuyền thì vẫn phải có người.”',
+  'Cậu Bảy không trả lời. Cậu mở cuốn sổ, lật sang trang mới, ghi ngày tháng, rồi bắt đầu đếm những chiếc thuyền đang ra khơi trong ánh chiều cuối cùng của mùa gió chướng.'
+].join('\n')}];
+
+/* ---------- khởi động ---------- */
+async function boot(){
+  Prefs.apply();
+  afterChange = kind => Sync.schedule(kind);
+  if (!window.crypto?.subtle){ $('#lock').hidden = false; $('#lock').innerHTML = '<div class="lock-box"><h1>Tủ truyện</h1><p>Trình duyệt này không hỗ trợ mã hoá. Hãy mở bằng Chrome, Safari, Edge hoặc Firefox bản mới qua địa chỉ https.</p></div>'; return; }
+  await DB.open();
+  if (HOSTED && Auth.clientId()) Auth.gis().catch(() => {});
+  if (HOSTED && 'serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if (HOSTED) ensureMammoth().catch(() => {});
+  try { history.replaceState({view: 'library', params: {}}, ''); } catch {}
+  const rem = await DB.kvGet('remember').catch(() => null);
+  if (rem?.key && await DB.kvGet('lock')){
+    Lock.remember = true; Vault.key = rem.key; Vault.syncKey = rem.sync || null;
+    await Lock.unlocked();
+    if (HOSTED && Auth.info && Vault.syncKey && Auth.token()) Sync.run({quiet: true}).catch(() => {});
+    return;
+  }
+  Lock.show();
+}
+boot();
+})();
+</script>
+</body>
+</html>
