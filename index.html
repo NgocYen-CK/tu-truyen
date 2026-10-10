@@ -1114,7 +1114,12 @@ const myDeviceName = () => LS.get('deviceName', null) || (({os, br}) => `${os} �
 
 const Auth = {
   get info(){ return LS.get('auth', null); },
-  clientId(){ return String(LS.get('clientId', '') || CFG.googleClientId || '').trim(); },
+  // Ưu tiên Client ID trong config.js; giá trị nhập tay chỉ dùng khi đúng dạng …apps.googleusercontent.com
+  clientId(){
+    const valid = v => /^[\w-]+\.apps\.googleusercontent\.com$/.test(String(v || '').trim());
+    if (valid(CFG.googleClientId)) return CFG.googleClientId.trim();
+    const own = String(LS.get('clientId', '') || '').trim(); return valid(own) ? own : '';
+  },
   token(){ const t = LS.get('token', null); return t && t.exp > Date.now() + 60000 ? t.t : null; },
   _p: null,
   gis(){
@@ -1481,7 +1486,7 @@ async function Settings(){
     const a = b.dataset.act;
     if (a === 'back') return history.length > 1 ? history.back() : go('library');
     if (a === 'rename'){ const v = $('#devname').value.trim(); if (!v) return; LS.set('deviceName', v); LS.set('nameAt', Date.now()); afterChange('state'); toast('Đã đổi tên thiết bị'); return; }
-    if (a === 'saveclient'){ LS.set('clientId', $('#clientid').value.trim()); Auth._p = null; Auth.gis().catch(() => {}); toast('Đã lưu Client ID'); return render(); }
+    if (a === 'saveclient'){ const v = $('#clientid').value.trim(); if (!/^[\w-]+\.apps\.googleusercontent\.com$/.test(v)) return toast('Đây không phải Client ID. Client ID có dạng dãy số-chữ kết thúc bằng .apps.googleusercontent.com (không phải Gmail).', 6000); LS.set('clientId', v); Auth._p = null; Auth.gis().catch(() => {}); toast('Đã lưu Client ID'); return render(); }
     if (a === 'signin'){ try { await Auth.signIn(); toast('Đã đăng nhập Google'); await Sync.run({}); } catch (err){ toast(err.message, 6000); } return render(); }
     if (a === 'syncnow'){ await Sync.manual(); return render(); }
     if (a === 'signout'){ if (await ask('Đăng xuất Google trên thiết bị này? Truyện vẫn còn trên máy để đọc offline.', 'Đăng xuất')){ await Auth.signOut(); toast('Đã đăng xuất Google'); render(); } return; }
