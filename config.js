@@ -1,7 +1,5 @@
-// Cấu hình Tủ truyện — sửa 2 dòng dưới rồi lưu lại.
+// Cấu hình Tủ truyện
 window.TU_TRUYEN_CONFIG = {
-  // Dán Google Client ID (dạng xxxx.apps.googleusercontent.com). Để trống nếu chưa cần đồng bộ.
-  googleClientId: "",
-  // Email Google duy nhất được phép đăng nhập đồng bộ (ví dụ: "ten@gmail.com"). Để trống = không giới hạn.
+  googleClientId: "352373222644-le0h0pvgb9sm49pu17dgp8fj5vqsmen4.apps.googleusercontent.com",
   ownerEmail: ""
 };
