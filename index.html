@@ -186,6 +186,11 @@ textarea.field{resize:vertical;line-height:1.55}
 .lock-box .err{color:var(--danger);min-height:1.4em;margin:0;font-size:.95rem}
 .lock-box .hint{text-align:left}
 .sheet-pin{position:sticky;top:-16px;margin-top:-16px;padding-top:16px;background:var(--surface);z-index:2;display:grid;gap:10px}
+/* Thanh tiến độ chương kiểu Wattpad: mảnh, sát đáy, chạm/kéo để đến trang */
+.r-prog{position:fixed;left:0;right:0;bottom:0;z-index:21;height:calc(env(safe-area-inset-bottom,0px) + 26px);padding:0 14px env(safe-area-inset-bottom,0px);display:flex;align-items:center;background:var(--bg);cursor:pointer;touch-action:none}
+.r-track{position:relative;flex:1;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.r-track i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:4px;transition:width .15s ease}
+.r-tip{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);transform:translateX(-50%);background:var(--fg);color:var(--bg);font-size:.85rem;padding:.2em .6em;border-radius:6px;white-space:nowrap;pointer-events:none;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -965,10 +970,26 @@ const Reader = {
       this.el = document.createElement('section'); this.el.id = 'reader'; this.el.setAttribute('aria-label', 'Trình đọc');
       this.el.innerHTML = `<div class="r-top"><button class="ib" data-r="back" aria-label="Quay lại">←</button><div class="ttl"><b id="rt-s"></b><span id="rt-c"></span></div><button class="ib" data-r="toc">Mục lục</button><button class="ib" data-r="edit" title="Sửa chương này">Sửa</button><button class="ib" data-r="aa" aria-label="Cỡ chữ và kiểu đọc">Aa</button></div>
       <article class="r-body"><div class="r-cols"><p class="r-kicker" id="r-k"></p><h2 id="r-h"></h2><div class="r-text" id="r-x"></div><span class="r-end" aria-hidden="true"></span></div></article>
+      <div class="r-prog" id="r-prog" role="slider" aria-label="Tiến độ chương — chạm để đến trang"><div class="r-track"><i id="r-fill"></i></div><span class="r-tip" id="r-tip" hidden></span></div>
       <button class="btn primary sel-btn" data-r="term" hidden>Thay từ này</button>
 `;
       document.body.appendChild(this.el);
       this.body = $('.r-body', this.el);
+      // Chạm hoặc kéo trên thanh tiến độ để đến trang tương ứng
+      const bar = $('#r-prog', this.el), tip = $('#r-tip', this.el);
+      const seekAt = x => {
+        const rc = bar.getBoundingClientRect(); const k = Math.max(0, Math.min(1, (x - rc.left) / rc.width));
+        if (this.paged){ this.page = Math.min(this.pages - 1, Math.floor(k * this.pages)); this.slide(); tip.textContent = `Trang ${this.page + 1}/${this.pages}`; }
+        else { this.el.scrollTop = k * (this.el.scrollHeight - this.el.clientHeight); tip.textContent = `${Math.round(k * 100)}%`; }
+        tip.hidden = false; tip.style.left = Math.max(30, Math.min(rc.width - 30, x - rc.left)) + 'px';
+        this.updatePg();
+      };
+      let dragging = false;
+      bar.addEventListener('pointerdown', e => { dragging = true; bar.setPointerCapture?.(e.pointerId); seekAt(e.clientX); e.stopPropagation(); });
+      bar.addEventListener('pointermove', e => { if (dragging) seekAt(e.clientX); });
+      const end = () => { if (!dragging) return; dragging = false; setTimeout(() => tip.hidden = true, 600); this.save(); };
+      bar.addEventListener('pointerup', end); bar.addEventListener('pointercancel', end);
+      bar.addEventListener('click', e => e.stopPropagation());
       this.el.addEventListener('click', e => this.onClick(e));
       this.el.addEventListener('scroll', () => this.onScroll(), {passive: true});
       this.body.addEventListener('touchstart', e => { const t = e.touches[0]; this.tx = t.clientX; this.ty = t.clientY; }, {passive: true});
@@ -999,7 +1020,7 @@ const Reader = {
     const b = this.body, cols = $('.r-cols', b);
     if (!this.paged){ b.style.cssText = ''; cols.style.cssText = ''; this.el.scrollTop = ratio > 0 ? ratio * (this.el.scrollHeight - this.el.clientHeight) : 0; this.lastY = this.el.scrollTop; this.updatePg(); return; }
     this.el.classList.remove('calm'); this.el.scrollTop = 0;
-    b.style.top = $('.r-top', this.el).offsetHeight + 'px'; b.style.bottom = 'calc(env(safe-area-inset-bottom, 0px) + 10px)';
+    b.style.top = $('.r-top', this.el).offsetHeight + 'px'; b.style.bottom = $('#r-prog', this.el).offsetHeight + 'px';
     const cs = getComputedStyle(b); const cw = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); const gap = 36;
     cols.style.cssText = `height:${b.clientHeight - parseFloat(cs.paddingTop)}px;column-width:${cw}px;column-gap:${gap}px;column-fill:auto;transform:none`;
     this.pageW = cw + gap;
@@ -1038,7 +1059,8 @@ const Reader = {
   },
   updatePg(){
     const r = this.ratio(); const pct = Math.min(100, Math.round(((this.idx + r) / this.list.length) * 100));
-    // Không còn thanh dưới; vị trí trang hiện trong Mục lục
+    // Thanh tiến độ của chương (kiểu Wattpad)
+    const f = $('#r-fill'); if (f) f.style.width = (this.paged ? ((this.page + 1) / this.pages) : r) * 100 + '%';
   },
   onScroll(){
     if (this.paged) return;
