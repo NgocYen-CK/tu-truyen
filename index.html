@@ -185,6 +185,7 @@ textarea.field{resize:vertical;line-height:1.55}
 .lock-box .field{text-align:center;font-size:1.25rem;letter-spacing:.12em}
 .lock-box .err{color:var(--danger);min-height:1.4em;margin:0;font-size:.95rem}
 .lock-box .hint{text-align:left}
+.sheet-pin{position:sticky;top:-16px;margin-top:-16px;padding-top:16px;background:var(--surface);z-index:2;display:grid;gap:10px}
 </style>
 </head>
 <body>
@@ -1069,11 +1070,12 @@ const Reader = {
   },
   toc(){
     const paged = this.paged, max = paged ? this.pages : 100, cur = paged ? this.page + 1 : Math.round(this.ratio() * 100);
-    const seek = `<div style="display:grid;gap:4px;padding-bottom:6px;border-bottom:1px solid var(--line)">
+    const seek = `<div style="display:grid;gap:4px;padding-bottom:8px;border-bottom:1px solid var(--line)">
       <div class="small muted num" id="t-pos">Chương ${this.idx + 1}/${this.list.length} · ${paged ? `trang ${cur}/${max}` : `${cur}% của chương`}</div>
       <input type="range" id="t-seek" min="${paged ? 1 : 0}" max="${max}" value="${cur}" aria-label="Kéo để đến trang" style="width:100%;accent-color:var(--accent)">
       <span class="hint">Kéo để ${paged ? 'đến trang cần đọc' : 'đến vị trí trong chương'}.</span></div>`;
-    const m = this.sheet(`<div class="line" style="display:flex;justify-content:space-between;align-items:center"><h3>${esc(this.story.title)}</h3><button class="ib" data-close>Đóng</button></div>${seek}<ol class="toc">${this.list.map((c, i) => `<li class="${i < this.idx ? 'read' : ''} ${i === this.idx ? 'cur' : ''}"><button class="go" data-i="${i}"><span class="n">${i + 1}</span><span class="t">${esc(c.title)}</span></button></li>`).join('')}</ol>`, m => {
+    // Tiêu đề + thanh kéo được ghim ở đầu bảng, không bị cuộn mất khi danh sách chương dài
+    const m = this.sheet(`<div class="sheet-pin"><div class="line" style="display:flex;justify-content:space-between;align-items:center"><h3>${esc(this.story.title)}</h3><button class="ib" data-close>Đóng</button></div>${seek}</div><ol class="toc">${this.list.map((c, i) => `<li class="${i < this.idx ? 'read' : ''} ${i === this.idx ? 'cur' : ''}"><button class="go" data-i="${i}"><span class="n">${i + 1}</span><span class="t">${esc(c.title)}</span></button></li>`).join('')}</ol>`, m => {
       m.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b){ m.remove(); this.save(); this.show(+b.dataset.i, 0); } });
       const sk = m.querySelector('#t-seek'), pos = m.querySelector('#t-pos');
       sk.addEventListener('input', () => {
