@@ -148,12 +148,12 @@ textarea.field{resize:vertical;line-height:1.55}
 .r-top .ttl span{font-size:.82rem;color:var(--muted)}
 .ib{background:none;border:0;padding:.35em .55em;cursor:pointer;border-radius:6px;white-space:nowrap}
 .ib:hover{background:var(--wash)}
-.r-body{max-width:var(--rw);margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 76px) 18px calc(env(safe-area-inset-bottom,0px) + 110px);font-size:var(--rs);line-height:var(--rl)}
+.r-body{max-width:var(--rw);margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 76px) 18px calc(env(safe-area-inset-bottom,0px) + 40px);font-size:var(--rs);line-height:var(--rl)}
 .r-body h2{font-size:1.35em;line-height:1.3;font-weight:700;margin:0 0 1.2em;text-align:center;text-wrap:balance}
 .r-body .r-kicker{text-align:center;color:var(--muted);font-size:.7em;margin:0 0 .4em;font-variant:small-caps;letter-spacing:.08em}
 .r-text p{margin:0 0 .9em;overflow-wrap:break-word}
 .r-text.just p{text-align:justify;hyphens:auto}
-.r-end{display:flex;justify-content:space-between;gap:10px;margin-top:2.4em;padding-top:1.2em;border-top:1px solid var(--line);font-size:16px;flex-wrap:wrap}
+.r-end{display:block;height:1px}
 .sel-btn{position:fixed;z-index:22;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 70px);box-shadow:0 4px 14px color-mix(in srgb,#000 22%,transparent)}
 /* Lật trang ngang */
 #reader.paged{overflow:hidden}
@@ -161,9 +161,10 @@ textarea.field{resize:vertical;line-height:1.55}
 #reader.paged .r-body{position:absolute;left:0;right:0;margin:0 auto;width:min(100%, calc(var(--rw) + 36px));max-width:none;padding:14px 18px 0;overflow:hidden}
 #reader.paged .r-cols{transition:transform .25s ease;will-change:transform}
 #reader.paged .r-text p{break-inside:auto;orphans:2;widows:2}
-#reader.paged .r-end{break-inside:avoid;margin-top:1.6em}
-.r-pg{font-size:.86rem;color:var(--muted);font-variant-numeric:tabular-nums;text-align:center;flex:1}
-.r-pg .bar{display:block;flex:none;width:100%;max-width:12rem;margin:4px auto 0}
+
+.r-pg{font-size:.86rem;color:var(--muted);font-variant-numeric:tabular-nums;text-align:center;flex:1;min-width:0;display:grid;gap:2px}
+#r-seek{width:100%;margin:0;accent-color:var(--accent);height:22px;cursor:pointer}
+#reader.paged .r-cols{transition:transform .2s ease}
 
 /* Sheets & modal */
 .scrim{position:fixed;inset:0;z-index:40;background:color-mix(in srgb,#000 38%,transparent);display:flex;align-items:flex-end;justify-content:center}
@@ -263,6 +264,9 @@ const DB = {
 
 /* ---------- trạng thái ---------- */
 const S = { stories: [], chapters: new Map(), progress: new Map(), mode: 'title', q: '', filter: 'all' };
+// Tình trạng tải truyện: 'dang' = đang tải dở (còn chương chưa chép), 'du' = đã tải đủ
+const statusOf = s => s.status === 'du' ? 'du' : 'dang';
+const statusPill = s => statusOf(s) === 'du' ? '<span class="pill ok">Đã tải đủ</span>' : '<span class="pill warn">Đang tải dở</span>';
 const live = () => S.stories.filter(s => !s.deleted && !s.trashed && !s.system);
 const trashed = () => S.stories.filter(s => !s.deleted && s.trashed && !s.system);
 
@@ -578,14 +582,14 @@ function Library(){
     <div id="tagcloud" class="tags"></div>
   </div>
   <div class="filters" role="group" aria-label="Lọc">
-    ${[['all','Tất cả'],['reading','Đang đọc'],['unread','Chưa đọc'],['done','Đã đọc xong']].map(([k,l]) => `<button data-filter="${k}" aria-pressed="${S.filter === k}">${l}</button>`).join('')}
+    ${[['all','Tất cả'],['dang','Đang tải dở'],['du','Đã tải đủ']].map(([k,l]) => `<button data-filter="${k}" aria-pressed="${S.filter === k}">${l} <span class="muted small num">${k === 'all' ? live().length : live().filter(s => statusOf(s) === k).length}</span></button>`).join('')}
   </div>
   <p id="count" class="muted small" style="margin:10px 0 0"></p>
   <ul class="shelf" id="shelf"></ul>
   ${trashed().length ? `<p style="margin-top:18px"><button class="link" data-act="trash">Thùng rác · ${trashed().length} truyện</button></p>` : ''}
   </div>`;
   const q = $('#q', root);
-  const ph = {title: 'Gõ tên truyện…', author: 'Gõ tên tác giả…', tag: 'Gõ tag, hoặc chọn bên dưới…'};
+  const ph = {all: 'Gõ tên truyện, tác giả hoặc tag…', title: 'Gõ tên truyện…', author: 'Gõ tên tác giả…', tag: 'Gõ tag, hoặc chọn bên dưới…'};
   q.placeholder = ph[S.mode];
   q.addEventListener('input', () => { S.q = q.value; drawShelf(); });
   root.addEventListener('click', async e => {
@@ -617,6 +621,7 @@ function drawContinue(){
 }
 function matches(s){
   const q = fold(S.q); if (!q) return true;
+  if (S.mode === 'all') return fold(s.title).includes(q) || fold(s.author).includes(q) || (s.tags || []).some(t => fold(t).includes(q));
   if (S.mode === 'title') return fold(s.title).includes(q);
   if (S.mode === 'author') return fold(s.author).includes(q);
   return (s.tags || []).some(t => fold(t).includes(q));
@@ -630,8 +635,7 @@ function drawShelf(){
   } else $('#tagcloud').innerHTML = '';
   const last = s => Math.max(s.updatedAt || 0, S.progress.get(s.id)?.updatedAt || 0);
   let list = live().filter(matches).filter(s => {
-    if (S.filter === 'all') return true; const pr = progressOf(s);
-    if (S.filter === 'unread') return !pr.p; if (S.filter === 'done') return !!pr.done; return !!pr.p && !pr.done;
+    return S.filter === 'all' || statusOf(s) === S.filter;
   }).sort((a, b) => last(b) - last(a));
   $('#count').textContent = live().length ? `${list.length} / ${live().length} truyện` : '';
   if (!live().length){ shelf.innerHTML = `<li class="empty">Tủ truyện đang trống.<br><button class="btn primary" style="margin-top:12px" data-act="new">Thêm truyện đầu tiên</button></li>`; return; }
@@ -639,7 +643,7 @@ function drawShelf(){
   shelf.innerHTML = list.map(s => {
     const pr = progressOf(s);
     const prog = !pr.count ? 'Chưa có chương' : pr.p ? (pr.done ? `Đã đọc xong · ${pr.count} chương` : `Chương ${pr.idx + 1}/${pr.count} · ${pr.pct}%`) : `${pr.count} chương · chưa đọc`;
-    return `<li><button class="row" data-open="${s.id}"><span class="r-t">${esc(s.title)}</span>${s.author ? `<span class="r-a">${esc(s.author)}</span>` : ''}${(s.tags || []).length ? `<span class="r-g">${s.tags.map(esc).join(' · ')}</span>` : ''}<span class="r-p num"><span class="bar"><i style="width:${pr.done ? 100 : pr.pct}%"></i></span>${prog}</span></button></li>`;
+    return `<li><button class="row" data-open="${s.id}"><span class="r-t">${esc(s.title)} ${statusPill(s)}</span>${s.author ? `<span class="r-a">${esc(s.author)}</span>` : ''}${(s.tags || []).length ? `<span class="r-g">${s.tags.map(esc).join(' · ')}</span>` : ''}<span class="r-p num"><span class="bar"><i style="width:${pr.done ? 100 : pr.pct}%"></i></span>${prog}</span></button></li>`;
   }).join('');
 }
 
@@ -651,6 +655,7 @@ function StoryView({id}){
   <header class="top"><button class="link" data-act="back">← Tủ truyện</button><div class="top-actions"><button class="btn" data-act="terms">Thay từ (${(s.terms || []).length})</button><button class="btn" data-act="word">Tải về Word</button><button class="btn" data-act="edit">Sửa thông tin</button></div></header>
   <div class="story-head">
     <h1>${esc(s.title)}</h1>${s.author ? `<p class="by">${esc(s.author)}</p>` : ''}
+    <div class="line" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">${statusPill(s)}<button class="link small" data-act="status">${statusOf(s) === 'du' ? 'Đổi thành “Đang tải dở”' : 'Đánh dấu “Đã tải đủ”'}</button></div>
     ${(s.tags || []).length ? `<div class="tags">${s.tags.map(t => `<button class="tag" data-tag="${esc(t)}">${esc(t)}</button>`).join('')}</div>` : ''}
     ${s.note ? `<p class="note">${esc(s.note)}</p>` : ''}
   </div>
@@ -682,6 +687,7 @@ function StoryView({id}){
     if (a === 'edit') go('editStory', {id});
     if (a === 'word') exportWordOne(s);
     if (a === 'terms') go('terms', {id});
+    if (a === 'status'){ (async () => { await saveStory({id, status: statusOf(s) === 'du' ? 'dang' : 'du'}); await loadAll(); toast(statusOf(S.stories.find(x => x.id === id)) === 'du' ? 'Đã đánh dấu: Đã tải đủ' : 'Đã đánh dấu: Đang tải dở'); current.params = {id, _scroll: scrollY}; render(); })(); }
     if (a === 'add') go('addChapters', {storyId: id});
     if (a === 'cont') go('reader', {storyId: id, chapterId: pr.p.chapterId, ratio: pr.p.ratio});
     if (a === 'start') go('reader', {storyId: id, chapterId: list[0].id, ratio: 0});
@@ -848,11 +854,15 @@ function StoryForm({id}){
     <label><span>Tên truyện</span><input id="f-title" class="field" required value="${esc(s?.title)}"></label>
     <label><span>Tác giả</span><input id="f-author" class="field" value="${esc(s?.author)}"></label>
     <label><span>Tag</span><input id="f-tags" class="field" value="${esc((s?.tags || []).join(', '))}" placeholder="Ví dụ: ngôn tình, hoàn thành, đọc lại"><p class="hint">Cách nhau bằng dấu phẩy.</p></label>
+    <div style="display:grid;gap:5px"><span class="sc muted">Tình trạng tải truyện</span>
+      <div class="seg" id="f-status"><button type="button" data-st="dang" aria-pressed="${!s || statusOf(s) === 'dang'}">Đang tải dở</button><button type="button" data-st="du" aria-pressed="${!!s && statusOf(s) === 'du'}">Đã tải đủ</button></div>
+      <p class="hint">Chọn “Đã tải đủ” khi đã chép hết các chương của truyện.</p></div>
     <label><span>Ghi chú</span><textarea id="f-note" class="field" rows="3">${esc(s?.note)}</textarea></label>
     ${s ? '' : `<div style="display:grid;gap:5px"><span class="sc muted">Nội dung</span>${sourceBlock('n')}<p class="hint">Có thể để trống và thêm chương sau.</p></div>`}
     <div class="form-actions"><button class="btn primary big" type="submit">${s ? 'Lưu thay đổi' : 'Lưu truyện'}</button>${s ? '<button class="btn danger" type="button" data-act="del">Xoá truyện</button>' : ''}</div>
   </form></div>`;
   const root = app(); const title = $('#f-title', root);
+  $$('#f-status [data-st]', root).forEach(b => b.onclick = () => $$('#f-status [data-st]', root).forEach(x => x.setAttribute('aria-pressed', x === b)));
   let src = null;
   if (!s){
     src = wireSource(root, 'n', () => title.value.trim() || 'Chương 1');
@@ -869,7 +879,7 @@ function StoryForm({id}){
   $('#f', root).onsubmit = async e => {
     e.preventDefault();
     if (src?.busy) return toast('Đang đọc tệp, đợi một chút…');
-    const data = {title: title.value.trim(), author: $('#f-author').value.trim(), tags: parseTags($('#f-tags').value), note: $('#f-note').value.trim()};
+    const data = {title: title.value.trim(), author: $('#f-author').value.trim(), tags: parseTags($('#f-tags').value), note: $('#f-note').value.trim(), status: $('#f-status [aria-pressed="true"]')?.dataset.st || 'dang'};
     if (!data.title) return title.focus();
     const saved = await saveStory(s ? {...data, id: s.id} : data);
     if (src && src.chapters.length) await addChapters(saved.id, src.chapters);
@@ -953,9 +963,9 @@ const Reader = {
     if (!this.el){
       this.el = document.createElement('section'); this.el.id = 'reader'; this.el.setAttribute('aria-label', 'Trình đọc');
       this.el.innerHTML = `<div class="r-top"><button class="ib" data-r="back" aria-label="Quay lại">←</button><div class="ttl"><b id="rt-s"></b><span id="rt-c"></span></div><button class="ib" data-r="toc">Mục lục</button><button class="ib" data-r="edit" title="Sửa chương này">Sửa</button><button class="ib" data-r="aa" aria-label="Cỡ chữ và kiểu đọc">Aa</button></div>
-      <article class="r-body"><div class="r-cols"><p class="r-kicker" id="r-k"></p><h2 id="r-h"></h2><div class="r-text" id="r-x"></div><nav class="r-end"><button class="btn" data-r="prev">← Chương trước</button><button class="btn primary" data-r="next">Chương sau →</button></nav></div></article>
+      <article class="r-body"><div class="r-cols"><p class="r-kicker" id="r-k"></p><h2 id="r-h"></h2><div class="r-text" id="r-x"></div><span class="r-end" aria-hidden="true"></span></div></article>
       <button class="btn primary sel-btn" data-r="term" hidden>Thay từ này</button>
-      <div class="r-bot"><button class="ib" data-r="prev" aria-label="Chương trước">‹ Trước</button><div class="r-pg" id="r-pg"></div><button class="ib" data-r="next" aria-label="Chương sau">Sau ›</button></div>`;
+`;
       document.body.appendChild(this.el);
       this.body = $('.r-body', this.el);
       this.el.addEventListener('click', e => this.onClick(e));
@@ -988,7 +998,7 @@ const Reader = {
     const b = this.body, cols = $('.r-cols', b);
     if (!this.paged){ b.style.cssText = ''; cols.style.cssText = ''; this.el.scrollTop = ratio > 0 ? ratio * (this.el.scrollHeight - this.el.clientHeight) : 0; this.lastY = this.el.scrollTop; this.updatePg(); return; }
     this.el.classList.remove('calm'); this.el.scrollTop = 0;
-    b.style.top = $('.r-top', this.el).offsetHeight + 'px'; b.style.bottom = $('.r-bot', this.el).offsetHeight + 'px';
+    b.style.top = $('.r-top', this.el).offsetHeight + 'px'; b.style.bottom = 'calc(env(safe-area-inset-bottom, 0px) + 10px)';
     const cs = getComputedStyle(b); const cw = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); const gap = 36;
     cols.style.cssText = `height:${b.clientHeight - parseFloat(cs.paddingTop)}px;column-width:${cw}px;column-gap:${gap}px;column-fill:auto;transform:none`;
     this.pageW = cw + gap;
@@ -1016,7 +1026,6 @@ const Reader = {
     x.innerHTML = t ? applyTerms(t, sid).split('\n').filter(Boolean).map(p => `<p>${esc(p)}</p>`).join('') : '<p class="muted">Chương này chưa có nội dung.</p>';
     $$('[data-r="prev"]', this.el).forEach(b => b.disabled = idx === 0);
     $$('[data-r="next"]', this.el).forEach(b => { b.disabled = idx === this.list.length - 1; });
-    const endNext = $('.r-end [data-r="next"]', this.el); endNext.textContent = idx === this.list.length - 1 ? 'Hết truyện' : 'Chương sau →';
     this.el.classList.remove('calm');
     $('.r-cols', this.body).style.transform = 'none';
     requestAnimationFrame(() => this.layout(ratio));
@@ -1028,8 +1037,7 @@ const Reader = {
   },
   updatePg(){
     const r = this.ratio(); const pct = Math.min(100, Math.round(((this.idx + r) / this.list.length) * 100));
-    const pg = this.paged ? ` · trang ${this.page + 1}/${this.pages}` : '';
-    $('#r-pg').innerHTML = `Chương ${this.idx + 1}/${this.list.length}${pg} · ${pct}%<span class="bar"><i style="width:${pct}%"></i></span>`;
+    // Không còn thanh dưới; vị trí trang hiện trong Mục lục
   },
   onScroll(){
     if (this.paged) return;
@@ -1060,8 +1068,21 @@ const Reader = {
     document.body.appendChild(m); m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-close]')) m.remove(); }); wire?.(m); return m;
   },
   toc(){
-    const m = this.sheet(`<div class="line" style="display:flex;justify-content:space-between;align-items:center"><h3>${esc(this.story.title)}</h3><button class="ib" data-close>Đóng</button></div><ol class="toc">${this.list.map((c, i) => `<li class="${i < this.idx ? 'read' : ''} ${i === this.idx ? 'cur' : ''}"><button class="go" data-i="${i}"><span class="n">${i + 1}</span><span class="t">${esc(c.title)}</span></button></li>`).join('')}</ol>`, m => {
+    const paged = this.paged, max = paged ? this.pages : 100, cur = paged ? this.page + 1 : Math.round(this.ratio() * 100);
+    const seek = `<div style="display:grid;gap:4px;padding-bottom:6px;border-bottom:1px solid var(--line)">
+      <div class="small muted num" id="t-pos">Chương ${this.idx + 1}/${this.list.length} · ${paged ? `trang ${cur}/${max}` : `${cur}% của chương`}</div>
+      <input type="range" id="t-seek" min="${paged ? 1 : 0}" max="${max}" value="${cur}" aria-label="Kéo để đến trang" style="width:100%;accent-color:var(--accent)">
+      <span class="hint">Kéo để ${paged ? 'đến trang cần đọc' : 'đến vị trí trong chương'}.</span></div>`;
+    const m = this.sheet(`<div class="line" style="display:flex;justify-content:space-between;align-items:center"><h3>${esc(this.story.title)}</h3><button class="ib" data-close>Đóng</button></div>${seek}<ol class="toc">${this.list.map((c, i) => `<li class="${i < this.idx ? 'read' : ''} ${i === this.idx ? 'cur' : ''}"><button class="go" data-i="${i}"><span class="n">${i + 1}</span><span class="t">${esc(c.title)}</span></button></li>`).join('')}</ol>`, m => {
       m.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b){ m.remove(); this.save(); this.show(+b.dataset.i, 0); } });
+      const sk = m.querySelector('#t-seek'), pos = m.querySelector('#t-pos');
+      sk.addEventListener('input', () => {
+        const v = +sk.value;
+        if (paged){ this.page = Math.max(0, Math.min(this.pages - 1, v - 1)); this.slide(); }
+        else this.el.scrollTop = (v / 100) * (this.el.scrollHeight - this.el.clientHeight);
+        pos.textContent = `Chương ${this.idx + 1}/${this.list.length} · ${paged ? `trang ${v}/${max}` : `${v}% của chương`}`;
+      });
+      sk.addEventListener('change', () => this.save());
     });
     m.querySelector('li.cur')?.scrollIntoView({block: 'center'});
   },
